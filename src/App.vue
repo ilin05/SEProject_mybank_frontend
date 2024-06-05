@@ -2,15 +2,9 @@
   <div>
     <div class="main" style="overflow-y: hidden; ">
       <el-container >
-<!--        <el-header class="title" style="display: flex; justify-content: space-between;">-->
-<!--          <div style="margin-top: 12px; display: inline-block;">-->
-<!--            <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>-->
-<!--          </div >-->
-<!--        </el-header>-->
         <el-main>
           <RouterView class="main" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />
         </el-main>
-<!--        <RouterView class="main" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />-->
       </el-container>
 
     </div>

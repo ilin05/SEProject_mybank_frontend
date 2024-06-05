@@ -1,3 +1,5 @@
+<!--Account导航页-->
+
 <template>
   <div class="main">
     <el-container>
@@ -16,27 +18,63 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              开户业务办理
+              账户
             </span>
-            <span class="history-trail">菜单 > 开户业务</span>
+            <RouterLink to="/menu">
+              <span class="history-trail">菜单</span>
+            </RouterLink>
+            <span class="history-trail"> > </span>
+            <RouterLink to="/account">
+              <span class="history-trail">账户</span>
+            </RouterLink>
           </div>
         </el-main>
       </el-container>
 
       <el-container>
-        <el-main>
-          <el-card title="开户" class="deposit_card">
-            <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="身份证开户" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >确认</el-button>
-              </el-tab-pane>
-            </el-tabs>
-          </el-card>
-        </el-main>
+                <el-aside class="aside" style="display: flex; color:#0f184d">
+                  <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
+                           style="height:100%; width: 100%;" :router="true">
+                    <el-menu-item index="account/savingaccount">
+                      <el-icon>
+                        <Reading />
+                      </el-icon>
+                      <span>储蓄账户</span>
+                    </el-menu-item>
+                    <el-menu-item index="account/creditcard">
+                      <el-icon>
+                        <Postcard />
+                      </el-icon>
+                      <span>信用卡</span>
+                    </el-menu-item>
+                    <el-menu-item index="account/foreigncurrency">
+                      <el-icon>
+                        <Tickets />
+                      </el-icon>
+                      <span>外汇账户</span>
+                    </el-menu-item>
+                    <el-menu-item index="account/internetbank">
+                      <el-icon>
+                        <UserFilled />
+                      </el-icon>
+                      <span>网银账户</span>
+                    </el-menu-item>
+
+                  </el-menu>
+                </el-aside>
+<!--        <el-main>-->
+<!--          <el-card title="开户" class="deposit_card">-->
+<!--            <el-tabs v-model="activeTab" type="border-card">-->
+<!--              <el-tab-pane label="身份证开户" name="tab1">-->
+<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
+<!--                  <div class="form-label">{{ item.label }}</div>-->
+<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
+<!--                </div>-->
+<!--                <el-button type="primary" >确认</el-button>-->
+<!--              </el-tab-pane>-->
+<!--            </el-tabs>-->
+<!--          </el-card>-->
+<!--        </el-main>-->
       </el-container>
     </el-container>
   </div>
@@ -60,7 +98,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* 将样式移动到<style>标签中，并使用类选择器 */
 .main {
   position: absolute;
@@ -84,8 +122,14 @@ export default {
   padding: 0 20px;
 }
 
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
+}
+
 .title2 {
-  background: url("../assets/figure2.jpg");
+  background: url("../../../assets/figure2.jpg");
   height: 60px;
   display: flex;
   align-items: center;
