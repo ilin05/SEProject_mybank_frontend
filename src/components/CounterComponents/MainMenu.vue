@@ -8,65 +8,65 @@
             <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
             <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
           </div >
-          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
-            <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
-          </el-button>
+          <RouterLink to="login">
+            <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+              <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
+            </el-button>
+          </RouterLink>
         </el-header>
 
         <el-container style="width: 100%; ">
 
           <el-main class="background_container" style="display: flex;" :router = "true">
             <div>
-              <RouterLink to="/openaccount">
+              <RouterLink to="/account">
                 <el-button class="functionBox" router-link = "/openaccount">
                 <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">开户</span>
+                color: black; font-weight: bold;">账户</span>
                 </el-button>
               </RouterLink>
-              <RouterLink to="/deposit">
+              <RouterLink to="/business">
                 <el-button class="functionBox">
                 <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">存款</span>
+                color: black; font-weight: bold;">业务</span>
                 </el-button>
               </RouterLink>
-              <RouterLink to="/withdraw">
-                <el-button class="functionBox"
-                           @click="newBookInfo.name = '', newBookInfo.category = '', newBookInfo.press = '', newBookInfo.year = '',
-                 newBookInfo.author = '', newBookInfo.price = '', newBookInfo.stock = '0', newBookVisible = true">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">取款</span>
-                </el-button>
-              </RouterLink>
-              <RouterLink to="/transfer">
+              <RouterLink to="/customer">
                 <el-button class="functionBox">
                 <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">转账</span>
+                color: black; font-weight: bold;">客户</span>
                 </el-button>
               </RouterLink>
-              <RouterLink to="/reportloss">
-                <el-button class="functionBox">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">挂失</span>
-                </el-button>
-              </RouterLink>
-              <RouterLink to="/reissue">
-                <el-button class="functionBox">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">补发</span>
-                </el-button>
-              </RouterLink>
-              <RouterLink to="/freeze">
-                <el-button class="functionBox">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">冻结</span>
-                </el-button>
-              </RouterLink>
-              <RouterLink to="/unfreeze">
-                <el-button class="functionBox">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">解冻</span>
-                </el-button>
-              </RouterLink>
+<!--              <RouterLink to="/transfer">-->
+<!--                <el-button class="functionBox">-->
+<!--                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';-->
+<!--                color: black; font-weight: bold;">转账</span>-->
+<!--                </el-button>-->
+<!--              </RouterLink>-->
+<!--              <RouterLink to="/reportloss">-->
+<!--                <el-button class="functionBox">-->
+<!--                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';-->
+<!--                color: black; font-weight: bold;">挂失</span>-->
+<!--                </el-button>-->
+<!--              </RouterLink>-->
+<!--              <RouterLink to="/reissue">-->
+<!--                <el-button class="functionBox">-->
+<!--                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';-->
+<!--                color: black; font-weight: bold;">补发</span>-->
+<!--                </el-button>-->
+<!--              </RouterLink>-->
+<!--              <RouterLink to="/freeze">-->
+<!--                <el-button class="functionBox">-->
+<!--                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';-->
+<!--                color: black; font-weight: bold;">冻结</span>-->
+<!--                </el-button>-->
+<!--              </RouterLink>-->
+<!--              <RouterLink to="/unfreeze">-->
+<!--                <el-button class="functionBox">-->
+<!--                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';-->
+<!--                color: black; font-weight: bold;">解冻</span>-->
+<!--                </el-button>-->
+<!--              </RouterLink>-->
             </div>
             <RouterView class="main" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />
           </el-main>
@@ -130,7 +130,7 @@ body{
 }
 
 .background_container{
-  background:url("../assets/figure2.jpg");
+  background:url("../../assets/figure2.jpg");
   width:100%;
   height:100%;
   position:fixed;
