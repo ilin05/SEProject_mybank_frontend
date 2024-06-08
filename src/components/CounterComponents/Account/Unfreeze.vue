@@ -79,11 +79,22 @@
           <el-card title="解冻" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="储蓄卡解冻" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >查询</el-button>
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  </el-form-item>
+                    <el-button type="primary" @click="ConfirmGetFreeze">查询</el-button>
+                </el-form>
+<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
+<!--                  <div class="form-label">{{ item.label }}</div>-->
+<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
+<!--                </div>-->
+<!--                <el-button type="primary" >查询</el-button>-->
               </el-tab-pane>
               <el-tab-pane label="信用卡解冻" name="tab2">
                 <div v-for="(item, index) in formItems2" :key="index" class="form-row">
@@ -95,16 +106,19 @@
             </el-tabs>
           </el-card>
           <el-card title="解冻查询" class="deposit_card">
-            <el-table>
-              <el-table-column prop="date" label="冻结日期">
+            <el-table :data="queryResult">
+<!--              <el-table-column prop="accountId" label="银行卡号">-->
+<!--              </el-table-column>-->
+              <el-table-column prop="freeze_time" label="冻结日期">
               </el-table-column>
-              <el-table-column prop="type" label="冻结原因">
+              <el-table-column prop="freeze_reason" label="冻结原因">
               </el-table-column>
-              <el-table-column prop="amount" label="冻结时长">
+              <el-table-column prop="unfreeze_time" label="解冻时间">
               </el-table-column>
-              <el-table-column prop="due" label="是否到期">
-              </el-table-column>
-              <el-table-column prop="withdraw" label="点击解冻">
+              <el-table-column fixed="right" label="操作" width="150">
+                <template #default="scope">
+                  <el-button link type="primary" size="small" @click=ConfirmUnfreeze>解冻</el-button>
+                </template>
               </el-table-column>
             </el-table>
           </el-card>
@@ -115,21 +129,80 @@
 </template>
 
 <script>
+import axios from "axios";
+import dayjs from "dayjs";
+import {ElMessage} from "element-plus";
+
 export default {
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-
-      ],
+      formItems1:{
+        accountId: '',
+      },
+      // formItems1: [
+      //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
+      //
+      // ],
       formItems2: [
         { label: '银行卡号：', placeholder: '请输入银行卡号' },
-
-      ]
+      ],
+      queryResult:[{
+        freeze_reason:'',
+        freeze_time:'',
+        unfreeze_time:''
+      }]
     };
+  },
+  methods:{
+    ConfirmGetFreeze(){
+      this.queryResult = []
+      axios.get("/cashier/unfreeze",
+          {params:{
+              accountId: this.formItems1.accountId
+          }
+      })
+          .then(response => {
+            if (response.data.code === 1) {
+              this.queryResult.push(response.data.payload)
+              ElMessage.success("查询成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            } else {
+              ElMessage.error(response.data.message)
+              console.log(response.data);
+            }
+          })
+          .catch(error => {
+            ElMessage.error("failed");
+          })
+    },
+    ConfirmUnfreeze(){
+      console.log("hello4")
+      const today = new Date();
+      const n = +this.formItems1.unfreezeTime;
+      const result = new Date(today.getTime() + (n * 24 * 60 * 60 * 1000));
+      //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
+      axios.post("/cashier/unfreeze", {
+        accountId: this.formItems1.accountId,
+        unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
+      })
+          .then(response => {
+            if (response.data.code === 1) {
+              ElMessage.success("解冻成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            } else {
+              ElMessage.error(response.data.message)
+              console.log(response.data);
+            }
+          })
+          .catch(error => {
+            ElMessage.error("failed");
+          })
+    }
   }
-};
+}
 </script>
 
 <style scoped>

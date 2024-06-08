@@ -9,14 +9,14 @@
               柜台系统登录
             </div>
             <div class="form-group">
-              <label for="username" style="color: white">Username:</label>
-              <input type="text" id="username" v-model="cashierLoginInfo.username" required>
+              <label for="cashierId" style="color: white">cashierId:</label>
+              <input type="text" id="cashierId" v-model="cashierLoginInfo.cashierId" required>
             </div>
             <div class="form-group">
               <label for="password" style="color: white">Password:</label>
               <input type="password" id="password" v-model="cashierLoginInfo.password" required>
             </div>
-            <button type="submit" class="login-button" style="margin-top:20px" onclick="ConfirmCashierLogin">Login</button>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmCashierLogin">Login</button>
             <RouterLink to="adminlogin">
               <button type="button" class="login-button" style="margin-top:20px">管理员登录</button>
             </RouterLink>
@@ -88,13 +88,14 @@ input {
 <script>
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import router from "@/router/index.js";
 
 export default {
 
   data(){
     return{
       cashierLoginInfo :{
-        username : '',
+        cashierId : '',
         password : '',
       },
     }
@@ -103,13 +104,21 @@ export default {
 
   methods:{
     ConfirmCashierLogin(){
-      axios.post("/login",{
-        username:this.cashierLoginInfo.username,
+      axios.post("/cashier/login",{
+        cashierId:+this.cashierLoginInfo.cashierId,
         password:this.cashierLoginInfo.password,
       })
           .then(response=>{
-            if(response.status ===200){
-              ElMessage.success("登录成功");
+            console.log(response.data)
+            if(response.data.code === 1){
+              ElMessage.success(response.data);
+              sessionStorage.setItem("token", response.data.payload);
+              router.push('/menu')
+              // setTimeout(500,()=>{
+              //location.href = '/menu'
+              // })
+            }else{
+              ElMessage.error("用户名或密码错误");
             }
           })
           .catch(error =>{

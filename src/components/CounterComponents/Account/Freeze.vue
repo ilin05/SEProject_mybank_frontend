@@ -3,13 +3,17 @@
     <el-container>
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
-          <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
-        </div >
+          <span
+              style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
+          <span
+              style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
+          <span
+              style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+        </div>
         <RouterLink to="login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
-            <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
+            <span
+                style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
           </el-button>
         </RouterLink>
       </el-header>
@@ -45,31 +49,31 @@
                    style="height:100%; width: 100%;" :router="true">
             <el-menu-item index="openaccount">
               <el-icon>
-                <Reading />
+                <Reading/>
               </el-icon>
               <span>开户</span>
             </el-menu-item>
             <el-menu-item index="freeze">
               <el-icon>
-                <Postcard />
+                <Postcard/>
               </el-icon>
               <span>冻结</span>
             </el-menu-item>
             <el-menu-item index="unfreeze">
               <el-icon>
-                <Tickets />
+                <Tickets/>
               </el-icon>
               <span>解冻</span>
             </el-menu-item>
             <el-menu-item index="reportloss">
               <el-icon>
-                <UserFilled />
+                <UserFilled/>
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
             <el-menu-item index="reissue">
               <el-icon>
-                <UserFilled />
+                <UserFilled/>
               </el-icon>
               <span>补发</span>
             </el-menu-item>
@@ -79,19 +83,34 @@
           <el-card title="冻结" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="储蓄卡冻结" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-
-                <el-button type="primary" >确认</el-button>
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  </el-form-item>
+                  <el-form-item label="冻结原因">
+                    <el-input v-model="formItems1.reason" placeholder="请输入冻结原因"/>
+                  </el-form-item>
+                  <el-form-item label="冻结天数">
+                    <el-input v-model="formItems1.unfreezeTime" placeholder="请输入冻结天数"/>
+                  </el-form-item>
+                  <el-button type="primary" @click="ConfirmFreeze">确认</el-button>
+                </el-form>
+                <!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
+                <!--                  <div class="form-label">{{ item.label }}</div>-->
+                <!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
+                <!--                </div>-->
               </el-tab-pane>
               <el-tab-pane label="信用卡冻结" name="tab2">
                 <div v-for="(item, index) in formItems2" :key="index" class="form-row">
                   <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
+                  <el-input class="form-input" :placeholder="item.placeholder" clearable/>
                 </div>
-                <el-button type="primary" >确认</el-button>
+                <el-button type="primary">确认</el-button>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -104,6 +123,11 @@
 <script>
 
 
+import axios from "axios";
+import {ElMessage} from "element-plus";
+import moment from "moment";
+import dayjs from 'dayjs';
+
 export default {
 
   data() {
@@ -111,17 +135,49 @@ export default {
       activeTab: 'tab1',
       date: null,
 
-      formItems1: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        { label: '冻结原因：', placeholder: '请选择原因' },
-        { label: '冻结时长（天）：', placeholder: '请选择类型' },
-      ],
+      formItems1: {
+        accountId: '',
+        reason: '',
+        unfreezeTime: '',
+      },
+      // formItems1: [
+      //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
+      //   { label: '冻结原因：', placeholder: '请选择原因' },
+      //   { label: '冻结时长（天）：', placeholder: '请选择类型' },
+      // ],
       formItems2: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        { label: '冻结原因：', placeholder: '请选择原因' },
-        { label: '冻结时长（天）：', placeholder: '请选择类型' },
+        {label: '银行卡号：', placeholder: '请输入银行卡号'},
+        {label: '冻结原因：', placeholder: '请选择原因'},
+        {label: '冻结时长（天）：', placeholder: '请选择类型'},
       ]
     };
+  },
+  methods: {
+    ConfirmFreeze() {
+      console.log("hello4")
+      const today = new Date();
+      const n = +this.formItems1.unfreezeTime;
+      const result = new Date(today.getTime() + (n * 24 * 60 * 60 * 1000));
+      //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
+      axios.post("/cashier/freeze", {
+        accountId: this.formItems1.accountId,
+        reason: this.formItems1.reason,
+        unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
+      })
+          .then(response => {
+            if (response.data.code === 1) {
+              ElMessage.success("冻结成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            } else {
+              ElMessage.error(response.data.message)
+              console.log(response.data);
+            }
+          })
+          .catch(error => {
+            ElMessage.error("failed");
+          })
+    }
   }
 };
 </script>

@@ -115,8 +115,15 @@ const router = createRouter({
     {
       path: '/account/savingaccount/reissue',
       component: ReissueVue
-    },
+    }
   ]
+})
+router.beforeEach((to, from, next)=>{
+  if(!sessionStorage.getItem("token") && to.path !== '/login'){
+    next({path: '/login'})
+  }else{
+    next()
+  }
 })
 
 export default router

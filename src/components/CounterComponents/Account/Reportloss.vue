@@ -79,11 +79,21 @@
           <el-card title="挂失" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="储蓄卡挂失" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >确认</el-button>
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  </el-form-item>
+<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
+<!--                  <div class="form-label">{{ item.label }}</div>-->
+<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
+<!--                </div>-->
+                <el-button type="primary" @click="ConfirmReportLoss">确认</el-button>
+                </el-form>
               </el-tab-pane>
               <el-tab-pane label="信用卡挂失" name="tab2">
                 <div v-for="(item, index) in formItems2" :key="index" class="form-row">
@@ -101,19 +111,46 @@
 </template>
 
 <script>
+import axios from "axios";
+import {ElMessage} from "element-plus";
+
 export default {
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
-      ],
+      formItems1:{
+        accountId: '',
+      },
+      // formItems1: [
+      //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
+      //   { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
+      // ],
       formItems2: [
         { label: '银行卡号：', placeholder: '请输入银行卡号' },
         { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
       ]
     };
+  },
+  methods:{
+    ConfirmReportLoss(){
+      console.log("hello3")
+      axios.post("/cashier/reportLoss",{
+        accountId:this.formItems1.accountId
+      })
+          .then(response=>{
+            if(response.data.code === 1){
+              ElMessage.success("挂失成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            }else{
+              ElMessage.error(response.data.message)
+              console.log(response.data);
+            }
+          })
+          .catch(error =>{
+            ElMessage.error("failed");
+          })
+    }
   }
 };
 </script>

@@ -79,11 +79,42 @@
           <el-card title="开户" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="身份证开户" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >确认</el-button>
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="开户人姓名">
+                    <el-input v-model="formItems1.customerName" placeholder="请输入姓名"/>
+                  </el-form-item>
+                  <el-form-item label="身份证号">
+                    <el-input v-model="formItems1.idNumber" placeholder="请输入身份证号"/>
+                  </el-form-item>
+                  <el-form-item label="电话号码">
+                    <el-input v-model="formItems1.phoneNumber" placeholder="请输入电话号码"/>
+                  </el-form-item>
+<!--                  <el-form-item label="账户币种">-->
+<!--                    <el-input v-model="formItems1." placeholder="请输入账户币种"/>-->
+<!--                  </el-form-item>-->
+                  <el-form-item label="开户金额">
+                    <el-input v-model="formItems1.openAmount" placeholder="请输入开户金额"/>
+                  </el-form-item>
+                  <el-form-item label="地址">
+                    <el-input v-model="formItems1.address" placeholder="请输入地址"/>
+                  </el-form-item>
+                  <el-form-item label="账户密码">
+                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
+                  </el-form-item>
+                  <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>
+                </el-form>
+<!--                <div class="form-label">开户人姓名</div>-->
+<!--                <el-input class="form-input" clearable />-->
+<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
+<!--                  <div class="form-label">{{ item.label }}</div>-->
+<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
+<!--                </div>-->
+<!--                <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>-->
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -94,21 +125,51 @@
 </template>
 
 <script>
+import axios from "axios";
+import {ElMessage} from "element-plus";
+
+
 export default {
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '开户人姓名：', placeholder: '请输入姓名' },
-        { label: '身份证号：', placeholder: '请输入身份证号' },
-        { label: '电话号码：', placeholder: '请输入电话号码' },
-        { label: '账户币种：', placeholder: '请选择币种' },
-        { label: '开户金额：', placeholder: '请输入金额' },
-        { label: '账户密码：', placeholder: '等待用户输入' },
-      ],
+      formItems1:{
+        customerName: '',
+        idNumber: '',
+        phoneNumber: '',
+        openAmount: '',
+        address: '',
+        password: '',
+      }
     };
+  },
+  methods:{
+    ConfirmOpenAccount(){
+      console.log("hello2")
+      axios.post("/cashier/openAccount",{
+        customerName: this.formItems1.customerName,
+        idNumber: this.formItems1.idNumber,
+        phoneNumber: this.formItems1.phoneNumber,
+        openAmount: +this.formItems1.openAmount,
+        password: this.formItems1.password,
+        address: this.formItems1.address
+      })
+          .then(response=>{
+            if(response.data.code === 1){
+              ElMessage.success("开户成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            } else{
+              ElMessage.error(response.data.message)
+            }
+          })
+          .catch(error =>{
+            ElMessage.error("failed");
+          })
+    },
   }
 };
+
 </script>
 
 <style scoped>
@@ -187,3 +248,5 @@ export default {
 
 /* 其他样式可以根据需要添加 */
 </style>
+
+

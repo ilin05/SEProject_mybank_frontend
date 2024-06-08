@@ -79,29 +79,43 @@
           <el-card title="补发" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="储蓄卡补发" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >查询</el-button>
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  </el-form-item>
+                  <el-button type="primary" @click="ConfirmReissue">补发</el-button>
+                </el-form>
+<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
+<!--                  <div class="form-label">{{ item.label }}</div>-->
+<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
+<!--                </div>-->
+<!--                <el-button type="primary" >查询</el-button>-->
               </el-tab-pane>
               <el-tab-pane label="信用卡补发" name="tab2">
                 <div v-for="(item, index) in formItems2" :key="index" class="form-row">
                   <div class="form-label">{{ item.label }}</div>
                   <el-input class="form-input" :placeholder="item.placeholder" clearable />
                 </div>
-                <el-button type="primary" >查询</el-button>
+                <el-button type="primary" @click="ConfirmReissue">查询</el-button>
               </el-tab-pane>
             </el-tabs>
           </el-card>
-          <el-card title="解冻查询" class="deposit_card">
-            <el-table>
-              <el-table-column prop="date" label="挂失日期">
-              </el-table-column>
-              <el-table-column prop="reissue" label="点击补发">
-              </el-table-column>
-            </el-table>
-          </el-card>
+<!--          <el-card title="解冻查询" class="deposit_card">-->
+<!--            <el-table :data="queryResult">-->
+<!--              <el-table-column prop="date" label="挂失日期">-->
+<!--              </el-table-column>-->
+<!--              <el-table-column fixed="right" label="操作" width="150">-->
+<!--                <template #default="scope">-->
+<!--                  <el-button link type="primary" size="small" @click=ConfirmUnfreeze>补发</el-button>-->
+<!--                </template>-->
+<!--              </el-table-column>-->
+<!--            </el-table>-->
+<!--          </el-card>-->
         </el-main>
       </el-container>
     </el-container>
@@ -109,19 +123,77 @@
 </template>
 
 <script>
+import axios from "axios";
+import {ElMessage} from "element-plus";
+import dayjs from "dayjs";
+
 export default {
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-
-      ],
+      formItems1:{
+        accountId: '',
+      },
+      // formItems1: [
+      //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
+      //
+      // ],
       formItems2: [
         { label: '银行卡号：', placeholder: '请输入银行卡号' },
 
-      ]
+      ],
+      // queryResult:[{
+      //   date:''
+      // }]
     };
+  },
+  methods:{
+    // ConfirmGetLoss(){
+    //   this.queryResult = []
+    //   axios.get("/cashier/reissue",
+    //       {params:{
+    //           accountId: this.formItems1.accountId
+    //         }
+    //       })
+    //       .then(response => {
+    //         if (response.data.code === 1) {
+    //           this.queryResult.push(response.data.payload)
+    //           ElMessage.success("查询成功");
+    //           console.log(response.data);
+    //           //location.href = '/menu'
+    //         } else {
+    //           ElMessage.error(response.data.message)
+    //           console.log(response.data);
+    //         }
+    //       })
+    //       .catch(error => {
+    //         ElMessage.error("failed");
+    //       })
+    // },
+    ConfirmReissue(){
+      //console.log("hello4")
+      const today = new Date();
+      const n = +this.formItems1.unfreezeTime;
+      const result = new Date(today.getTime() + (n * 24 * 60 * 60 * 1000));
+      //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
+      axios.post("/cashier/reissue", {
+        accountId: this.formItems1.accountId,
+        reissueTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
+      })
+          .then(response => {
+            if (response.data.code === 1) {
+              ElMessage.success("补发成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            } else {
+              ElMessage.error(response.data.message)
+              console.log(response.data);
+            }
+          })
+          .catch(error => {
+            ElMessage.error("failed");
+          })
+    }
   }
 };
 </script>
