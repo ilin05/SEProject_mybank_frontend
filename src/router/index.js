@@ -34,7 +34,7 @@ const router = createRouter({
     },
     {
       path:'/adminlogin',
-      component:AdminloginVue
+      redirect:'/login'
     },
     {
       path:'/adminmenu',

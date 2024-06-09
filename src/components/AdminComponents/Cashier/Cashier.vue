@@ -3,9 +3,8 @@
     <el-container>
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
-          <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行管理员系统</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员：XXX</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
@@ -46,8 +45,17 @@
             <el-table-column prop="privilege" label="权限">
             </el-table-column>
             <el-table-column  label="点击修改信息或删除">
-              <el-button type="normal" @click="modifyCashierVisible = true">修改</el-button>
-              <el-button type="danger" @click="deleteCashierVisible = true">删除</el-button>
+              <template v-slot ="scope">
+                <el-button type="normal" v-model="modifyCashierVisible" @click = "this.modifyCashierInfo.cashierId = scope.row.cashierId, this.modifyCashierInfo.cashierName = scope.row.cashierName,
+        this.modifyCashierInfo.idNumber = scope.row.idNumber, this.modifyCashierInfo.phoneNumber = scope.row.phoneNumber, this.modifyCashierInfo.address = scope.row.address,
+        this.modifyCashierInfo.privilege = scope.row.privilege,
+        modifyCashierVisible = true">修改</el-button>
+
+                <el-button type="danger" v-model="deleteCashierVisible" @click = "this.deleteCashierInfo.cashierId = scope.row.cashierId, this.deleteCashierInfo.cashierName = scope.row.cashierName,
+        this.deleteCashierInfo.idNumber = scope.row.idNumber, this.deleteCashierInfo.phoneNumber = scope.row.phoneNumber, this.deleteCashierInfo.address = scope.row.address,
+        this.deleteCashierInfo.privilege = scope.row.privilege,
+        deleteCashierVisible = true">删除</el-button>
+              </template>
             </el-table-column>
           </el-table>
         </el-card>
@@ -74,10 +82,78 @@
           <el-input v-model="formItems1.address" placeholder="请输入地址"/>
         </el-form-item>
         <el-form-item label="出纳员权限">
-          <el-input v-model="formItems1.privilege" placeholder="请输入权限"/>
+          <br>
+          <el-select v-model="formItems1.privilege" placeholder="请选择权限">
+            <el-option label="A" value="A"></el-option>
+            <el-option label="B" value="B"></el-option>
+            <el-option label="C" value="C"></el-option>
+          </el-select>
         </el-form-item>
-        <el-button type="primary" @click="ConfirmAddCashier(); ConfirmAddCashier=false">确认</el-button>
       </el-form>
+      <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="addCashierVisible = false">取消</el-button>
+                    <el-button type="primary" @click="ConfirmAddCashier">
+                        确认
+                    </el-button>
+                </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="deleteCashierVisible" title="删除出纳员">
+      <span style="font-weight: bold;">请确认删除出纳员信息:</span>
+      <p style="padding: 2.5px;"><span style="font-weight: bold;">工号：</span>{{ deleteCashierInfo.cashierId }}</p>
+      <p style="padding: 2.5px;"><span style="font-weight: bold;">姓名：</span>{{ deleteCashierInfo.cashierName }}</p>
+      <p style="padding: 2.5px;"><span style="font-weight: bold;">身份证号：</span>{{ deleteCashierInfo.idNumber }}</p>
+      <p style="padding: 2.5px;"><span style="font-weight: bold;">手机号码：</span>{{ deleteCashierInfo.phoneNumber }}</p>
+      <p style="padding: 2.5px;"><span style="font-weight: bold;">地址：</span>{{ deleteCashierInfo.address }}</p>
+      <p style="padding: 2.5px;"><span style="font-weight: bold;">权限：</span>{{ deleteCashierInfo.privilege }}</p>
+      <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="deleteCashierVisible = false">取消</el-button>
+                    <el-button type="danger" @click="ConfirmDeleteCashier">
+                        删除
+                    </el-button>
+                </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="modifyCashierVisible" title="修改出纳员信息">
+      <el-form
+          :label-position="left"
+          label-width="auto"
+          :model="modifyCashierInfo"
+          style="max-width: 600px"
+      >
+        <el-form-item label="姓名">
+          <el-input v-model="modifyCashierInfo.cashierName" placeholder="请输入姓名"/>
+        </el-form-item>
+        <el-form-item label="身份证号">
+          <el-input v-model="modifyCashierInfo.idNumber" placeholder="请输入身份证号"/>
+        </el-form-item>
+        <el-form-item label="电话号码">
+          <el-input v-model="modifyCashierInfo.phoneNumber" placeholder="请输入电话号码"/>
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-input v-model="modifyCashierInfo.address" placeholder="请输入地址"/>
+        </el-form-item>
+        <el-form-item label="出纳员权限">
+          <br>
+          <el-select v-model= "modifyCashierInfo.privilege" placeholder="请选择权限">
+            <el-option label="A" value="A"></el-option>
+            <el-option label="B" value="B"></el-option>
+            <el-option label="C" value="C"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="modifyCashierVisible = false">取消</el-button>
+                    <el-button type="primary" @click="ConfirmModifyCashier">
+                        确认
+                    </el-button>
+                </span>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -94,6 +170,24 @@ export default {
       modifyCashierVisible :false,
       deleteCashierVisible : false,
       formItems1 :{
+        cashierName :'',
+        idNumber : '',
+        phoneNumber :'',
+        address : '',
+        password : '',
+        privilege : '',
+      },
+      modifyCashierInfo :{
+        cashierId : 0,
+        cashierName :'',
+        idNumber : '',
+        phoneNumber :'',
+        address : '',
+        password : '',
+        privilege : '',
+      },
+      deleteCashierInfo :{
+        cashierId : 0,
         cashierName :'',
         idNumber : '',
         phoneNumber :'',
@@ -129,6 +223,7 @@ export default {
             console.log(response.data)
             if (response.data.code === 1) {
               ElMessage.success(response.data);
+              this.addCashierVisible = false;
               this.QueryCashier();
             } else {
               ElMessage.error("添加失败");
@@ -136,6 +231,49 @@ export default {
           })
           .catch(error => {
             ElMessage.error("添加失败");
+          })
+    },
+
+    ConfirmModifyCashier() {
+      axios.put("/admin/cashier", {
+        cashierId : this.modifyCashierInfo.cashierId,
+        cashierName: this.modifyCashierInfo.cashierName,
+        idNumber: this.modifyCashierInfo.idNumber,
+        phoneNumber: this.modifyCashierInfo.phoneNumber,
+        address: this.modifyCashierInfo.address,
+        privilege: this.modifyCashierInfo.privilege,
+      })
+          .then(response => {
+            console.log(response.data)
+            if (response.data.code === 1) {
+              ElMessage.success(response.data);
+              this.modifyCashierVisible = false;
+              this.QueryCashier();
+            } else {
+              ElMessage.error("修改失败");
+            }
+          })
+          .catch(error => {
+            ElMessage.error("修改失败");
+          })
+    },
+
+    ConfirmDeleteCashier() {
+      axios.delete("/admin/cashier", {
+        cashierId : this.deleteCashierInfo.cashierId,
+      })
+          .then(response => {
+            console.log(response.data)
+            if (response.data.code === 1) {
+              ElMessage.success(response.data);
+              this.modifyCashierVisible = false;
+              this.QueryCashier();
+            } else {
+              ElMessage.error("修改失败");
+            }
+          })
+          .catch(error => {
+            ElMessage.error("修改失败");
           })
     },
 
