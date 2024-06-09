@@ -18,32 +18,19 @@
 
           <el-main class="background_container" style="display: flex;" :router = "true">
             <div>
-              <RouterLink to="/openaccount">
+              <RouterLink to="/cashier">
                 <el-button class="functionBox" router-link = "/openaccount">
                 <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
                 color: black; font-weight: bold;">出纳员管理</span>
                 </el-button>
               </RouterLink>
-              <RouterLink to="/deposit">
+              <RouterLink to="/loanadmin">
                 <el-button class="functionBox">
                 <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
                 color: black; font-weight: bold;">贷款审查员管理</span>
                 </el-button>
               </RouterLink>
-              <RouterLink to="/withdraw">
-                <el-button class="functionBox"
-                           @click="newBookInfo.name = '', newBookInfo.category = '', newBookInfo.press = '', newBookInfo.year = '',
-                 newBookInfo.author = '', newBookInfo.price = '', newBookInfo.stock = '0', newBookVisible = true">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">取款</span>
-                </el-button>
-              </RouterLink>
-              <RouterLink to="/transfer">
-                <el-button class="functionBox">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">转账</span>
-                </el-button>
-              </RouterLink>
+
             </div>
             <RouterView class="main" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />
           </el-main>

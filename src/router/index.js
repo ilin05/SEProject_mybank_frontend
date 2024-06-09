@@ -18,6 +18,7 @@ import LoanVue from "@/components/CounterComponents/Business/Loan.vue";
 import AccountVue from "@/components/CounterComponents/Account/Account.vue"
 import OpenSavingAccountVue from "@/components/CounterComponents/Account/OpenSavingAccount.vue";
 import BusinessVue from "@/components/CounterComponents/Business/Business.vue";
+import CashierVue from "@/components/AdminComponents/Cashier/Cashier.vue";
 
 
 const router = createRouter({
@@ -115,7 +116,13 @@ const router = createRouter({
     {
       path: '/account/savingaccount/reissue',
       component: ReissueVue
-    }
+    },
+
+      //cashier底下的索引
+    {
+      path: '/cashier',
+      component: CashierVue
+    },
   ]
 })
 router.beforeEach((to, from, next)=>{

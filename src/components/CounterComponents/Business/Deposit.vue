@@ -24,7 +24,11 @@
               <span class="history-trail">菜单</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/deposit">
+            <RouterLink to="/business">
+              <span class="history-trail">业务</span>
+            </RouterLink>
+            <span class="history-trail"> > </span>
+            <RouterLink to="/business/deposit">
               <span class="history-trail">存款业务</span>
             </RouterLink>
           </div>
@@ -32,6 +36,36 @@
       </el-container>
 
       <el-container>
+        <el-aside class="aside" style="display: flex; color:#0f184d">
+          <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
+                   style="height:100%; width: 100%;" :router="true">
+            <el-menu-item index="deposit">
+              <el-icon>
+                <Reading />
+              </el-icon>
+              <span>存款</span>
+            </el-menu-item>
+            <el-menu-item index="withdraw">
+              <el-icon>
+                <Postcard />
+              </el-icon>
+              <span>取款</span>
+            </el-menu-item>
+            <el-menu-item index="transfer">
+              <el-icon>
+                <Tickets />
+              </el-icon>
+              <span>转账</span>
+            </el-menu-item>
+            <el-menu-item index="loan">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>贷款</span>
+            </el-menu-item>
+
+          </el-menu>
+        </el-aside>
         <el-main>
             <el-card title="存款" class="deposit_card">
               <el-tabs v-model="activeTab" type="border-card">
@@ -101,6 +135,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+}
+
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
 }
 
 .title2 {

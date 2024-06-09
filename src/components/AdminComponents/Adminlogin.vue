@@ -16,7 +16,10 @@
               <label for="password" style="color: white">Password:</label>
               <input type="password" id="password" v-model="adminLoginInfo.password" required>
             </div>
-            <button type="submit" class="login-button" style="margin-top:20px" onclick="ConfirmAdminLogin">Login</button>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmAdminLogin">Login</button>
+            <RouterLink to="login">
+              <button type="button" class="login-button" style="margin-top:20px">出纳员登录</button>
+            </RouterLink>
           </el-card>
         </el-main>
 
@@ -86,6 +89,7 @@ input {
 
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import router from "@/router/index.js";
 
 export default {
 
@@ -101,13 +105,15 @@ export default {
 
   methods:{
     ConfirmAdminLogin(){
-      axios.post("/adminlogin",{
+      axios.post("/admin/login",{
         username:this.adminLoginInfo.username,
         password:this.adminLoginInfo.password,
       })
           .then(response=>{
-            if(response.status ===200){
+            if(response.data.code ===1){
               ElMessage.success("登录成功");
+              sessionStorage.setItem("token",response.data.payload);
+              router.push("/adminmenu");
             }
           })
           .catch(error =>{
