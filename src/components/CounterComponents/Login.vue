@@ -4,7 +4,7 @@
       <el-container>
 
         <el-main class="background_container" style="display: flex;" :router = "true">
-          <el-card title="登录" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
+          <el-card title="出纳员登录" v-show="cashierLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
             <div style="margin-top: 20px;  font-size: 2em; font-weight: bold; color: #ffffff">
               柜台系统登录
             </div>
@@ -17,9 +17,23 @@
               <input type="password" id="password" v-model="cashierLoginInfo.password" required>
             </div>
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmCashierLogin">Login</button>
-            <RouterLink to="adminlogin">
-              <button type="button" class="login-button" style="margin-top:20px">管理员登录</button>
-            </RouterLink>
+            <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; cashierLoginVisible=false">管理员登录</button>
+          </el-card>
+
+          <el-card title="管理员登录" v-show="adminLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
+            <div style="margin-top: 20px;  font-size: 2em; font-weight: bold; color: #ffffff">
+              系统管理员登录
+            </div>
+            <div class="form-group">
+              <label for="username" style="color: white">Username:</label>
+              <input type="text" id="username" v-model="adminLoginInfo.username" required>
+            </div>
+            <div class="form-group">
+              <label for="password" style="color: white">Password:</label>
+              <input type="password" id="password" v-model="adminLoginInfo.password" required>
+            </div>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmAdminLogin">Login</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = false; cashierLoginVisible=true">出纳员登录</button>
           </el-card>
         </el-main>
 
@@ -89,6 +103,7 @@ input {
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
+import SHA256 from "crypto-js/sha256";
 
 export default {
 
@@ -98,11 +113,40 @@ export default {
         cashierId : '',
         password : '',
       },
+      adminLoginInfo :{
+        username : '',
+        password : '',
+      },
+
+      adminLoginVisible : false,
+      cashierLoginVisible : true,
     }
 
   },
 
   methods:{
+    ConfirmAdminLogin(){
+      //console.log("hello")
+      //console.log(this.adminLoginInfo.password)
+      console.log(SHA256(this.adminLoginInfo.password).toString())
+      axios.post("/admin/login",{
+        username:this.adminLoginInfo.username,
+        password:this.adminLoginInfo.password,
+      })
+          .then(response=>{
+            if(response.data.code === 1){
+              ElMessage.success("登录成功");
+              sessionStorage.setItem("token", response.data.payload);
+              router.push('/adminmenu');
+            }else{
+              ElMessage.error(response.data)
+            }
+          })
+          .catch(error =>{
+            ElMessage.error("用户名或密码错误");
+          })
+    },
+
     ConfirmCashierLogin(){
       axios.post("/cashier/login",{
         cashierId:+this.cashierLoginInfo.cashierId,

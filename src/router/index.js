@@ -22,6 +22,8 @@ import Closure from "@/components/CounterComponents/Account/Closure.vue";
 import ModifyAccount from "@/components/CounterComponents/Account/ModifyAccount.vue";
 import QueryAccount from "@/components/CounterComponents/Account/QueryAccount.vue";
 
+import CashierVue from "@/components/AdminComponents/Cashier/Cashier.vue";
+import CustomerQuery   from "@/components/CounterComponents/Customer/CustomerQuery.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,7 +38,7 @@ const router = createRouter({
     },
     {
       path:'/adminlogin',
-      component:AdminloginVue
+      redirect:'/login'
     },
     {
       path:'/adminmenu',
@@ -51,9 +53,13 @@ const router = createRouter({
       component:AccountVue
     },
 
+    // {
+    //   path: '/customer',
+    //   redirect: '/customer/customerquery'
+    // },
     {
-      path: '/customer',
-      redirect: '/customer/customerquery'
+      path:'/customer',
+      component:CustomerQuery
     },
     {
       path: '/account/savingaccount',
@@ -130,7 +136,13 @@ const router = createRouter({
     {
       path: '/account/savingaccount/queryaccount',
       component: QueryAccount
-    }
+    },
+
+      //cashier底下的索引
+    {
+      path: '/cashier',
+      component: CashierVue
+    },
   ]
 })
 router.beforeEach((to, from, next)=>{

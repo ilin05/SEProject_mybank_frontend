@@ -62,19 +62,7 @@
 
                   </el-menu>
                 </el-aside>
-<!--        <el-main>-->
-<!--          <el-card title="开户" class="deposit_card">-->
-<!--            <el-tabs v-model="activeTab" type="border-card">-->
-<!--              <el-tab-pane label="身份证开户" name="tab1">-->
-<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
-<!--                  <div class="form-label">{{ item.label }}</div>-->
-<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
-<!--                </div>-->
-<!--                <el-button type="primary" >确认</el-button>-->
-<!--              </el-tab-pane>-->
-<!--            </el-tabs>-->
-<!--          </el-card>-->
-<!--        </el-main>-->
+
       </el-container>
     </el-container>
   </div>

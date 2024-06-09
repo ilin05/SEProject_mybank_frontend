@@ -22,7 +22,7 @@ axios.interceptors.request.use( config =>{
     const token = sessionStorage.getItem('token')
     if(token) config.headers.Authorization = token
     if(config.data && config.data.password) {
-        const hashPassword = SHA256(config.data.password);
+        const hashPassword = SHA256(config.data.password).toString();
         //const hashPassword = sha256(config.data.password);
         config.data.password = hashPassword
     }

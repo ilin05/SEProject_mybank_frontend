@@ -17,6 +17,9 @@
               <input type="password" id="password" v-model="adminLoginInfo.password" required>
             </div>
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmAdminLogin">Login</button>
+            <RouterLink to="login">
+              <button type="button" class="login-button" style="margin-top:20px">出纳员登录</button>
+            </RouterLink>
           </el-card>
         </el-main>
 
