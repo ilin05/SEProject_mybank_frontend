@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              挂失业务办理
+              解冻业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -32,8 +32,8 @@
               <span class="history-trail">储蓄账户</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/account/savingaccount/reportloss">
-              <span class="history-trail">挂失</span>
+            <RouterLink to="/account/savingaccount/queryaccount">
+              <span class="history-trail">解冻</span>
             </RouterLink>
           </div>
         </el-main>
@@ -94,9 +94,9 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <el-card title="挂失" class="deposit_card">
+          <el-card title="解冻" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="储蓄卡挂失" name="tab1">
+              <el-tab-pane label="储蓄卡解冻" name="tab1">
                 <el-form
                     :label-position="left"
                     label-width="auto"
@@ -106,24 +106,38 @@
                   <el-form-item label="银行卡号">
                     <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
                   </el-form-item>
-                  <el-form-item label="密码">
-                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
-                  </el-form-item>
-<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
-<!--                  <div class="form-label">{{ item.label }}</div>-->
-<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
-<!--                </div>-->
-                <el-button type="primary" @click="ConfirmReportLoss">确认</el-button>
+                  <el-button type="primary" @click="ConfirmQuery">查询</el-button>
                 </el-form>
               </el-tab-pane>
-              <el-tab-pane label="信用卡挂失" name="tab2">
-                <div v-for="(item, index) in formItems2" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >确认</el-button>
-              </el-tab-pane>
             </el-tabs>
+          </el-card>
+          <el-card title="账户信息查询" class="deposit_card">
+            <el-table :data="queryResult">
+              <el-table-column prop="accountId" label="银行卡号">
+              </el-table-column>
+              <el-table-column prop="customerId" label="用户ID">
+              </el-table-column>
+              <el-table-column prop="customerName" label="用户姓名">
+              </el-table-column>
+              <el-table-column prop="idNumber" label="身份证号">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+              <el-table-column prop="phoneNumber" label="电话">
+              </el-table-column>
+              <el-table-column prop="balance" label="账户余额">
+              </el-table-column>
+              <el-table-column prop="openTime" label="开户时间">
+              </el-table-column>
+              <el-table-column prop="openAmount" label="开户金额">
+              </el-table-column>
+              <el-table-column prop="freezeState" label="是否冻结">
+              </el-table-column>
+              <el-table-column prop="lossState" label="是否挂失">
+              </el-table-column>
+              <el-table-column prop="deleted" label="是否已销户">
+              </el-table-column>
+            </el-table>
           </el-card>
         </el-main>
       </el-container>
@@ -133,6 +147,7 @@
 
 <script>
 import axios from "axios";
+import dayjs from "dayjs";
 import {ElMessage} from "element-plus";
 
 export default {
@@ -141,36 +156,43 @@ export default {
       activeTab: 'tab1',
       formItems1:{
         accountId: '',
-        password: ''
       },
-      // formItems1: [
-      //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
-      //   { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
-      // ],
-      formItems2: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
-      ]
+      queryResult:[{
+        accountId:'',
+        customerId:'',
+        customerName:'',
+        idNumber: '',
+        address: '',
+        phoneNumber:'',
+        balance:'',
+        openTime:'',
+        openAmount:'',
+        freezeState:'',
+        lossState:'',
+        deleted:'',
+      }]
     };
   },
   methods:{
-    ConfirmReportLoss(){
-      console.log("hello3")
-      axios.post("/cashier/reportLoss",{
-        accountId:this.formItems1.accountId,
-        password: this.formItems1.password
-      })
-          .then(response=>{
-            if(response.data.code === 1){
-              ElMessage.success("挂失成功");
+    ConfirmQuery(){
+      this.queryResult = []
+      axios.get("/cashier/accountInfo",
+          {params:{
+              accountId: this.formItems1.accountId
+            }
+          })
+          .then(response => {
+            if (response.data.code === 1) {
+              this.queryResult.push(response.data.payload)
+              ElMessage.success("查询成功");
               console.log(response.data);
               //location.href = '/menu'
-            }else{
+            } else {
               ElMessage.error(response.data.message)
               console.log(response.data);
             }
           })
-          .catch(error =>{
+          .catch(error => {
             ElMessage.error("failed");
           })
     },
@@ -178,7 +200,7 @@ export default {
       sessionStorage.clear()
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -205,12 +227,6 @@ export default {
   padding: 0 20px;
 }
 
-.aside {
-  min-height: calc(100vh - 60px);
-  width: 180px;
-  background-color: red;
-}
-
 .title2 {
   background: url("../../../assets/figure2.jpg");
   height: 60px;
@@ -223,6 +239,12 @@ export default {
   font-family: 'Microsoft YaHei';
 }
 
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
+}
+
 .history-trail {
   margin-left: 30px;
   font-size: medium;
@@ -230,13 +252,6 @@ export default {
   font-weight: normal;
 }
 
-.content-card {
-  margin: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
 .form-row {
   display: flex;

@@ -7,7 +7,7 @@
           <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
           <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
         </div >
-        <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+        <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
           <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
         </el-button>
       </el-header>
@@ -43,6 +43,12 @@
               </el-icon>
               <span>开户</span>
             </el-menu-item>
+            <el-menu-item index="savingaccount/queryaccount">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>查询账户信息</span>
+            </el-menu-item>
             <el-menu-item index="savingaccount/freeze">
               <el-icon>
                 <Postcard />
@@ -57,15 +63,27 @@
             </el-menu-item>
             <el-menu-item index="savingaccount/reportloss">
               <el-icon>
-                <UserFilled />
+                <CreditCard />
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
             <el-menu-item index="savingaccount/reissue">
               <el-icon>
-                <UserFilled />
+                <Checked />
               </el-icon>
               <span>补发</span>
+            </el-menu-item>
+            <el-menu-item index="savingaccount/closure">
+              <el-icon>
+                <Delete />
+              </el-icon>
+              <span>销户</span>
+            </el-menu-item>
+            <el-menu-item index="savingaccount/modifyaccount">
+              <el-icon>
+                <Edit />
+              </el-icon>
+              <span>修改密码</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -81,6 +99,11 @@ export default {
     return {
 
     };
+  },
+  methods:{
+    DeleteToken(){
+      sessionStorage.clear()
+    }
   }
 };
 </script>

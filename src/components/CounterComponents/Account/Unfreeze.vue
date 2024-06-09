@@ -8,7 +8,7 @@
           <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
         </div >
         <RouterLink to="/login">
-          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
             <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
           </el-button>
         </RouterLink>
@@ -49,6 +49,12 @@
               </el-icon>
               <span>开户</span>
             </el-menu-item>
+            <el-menu-item index="queryaccount">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>查询账户信息</span>
+            </el-menu-item>
             <el-menu-item index="freeze">
               <el-icon>
                 <Postcard />
@@ -63,15 +69,27 @@
             </el-menu-item>
             <el-menu-item index="reportloss">
               <el-icon>
-                <UserFilled />
+                <CreditCard />
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
             <el-menu-item index="reissue">
               <el-icon>
-                <UserFilled />
+                <Checked />
               </el-icon>
               <span>补发</span>
+            </el-menu-item>
+            <el-menu-item index="closure">
+              <el-icon>
+                <Delete />
+              </el-icon>
+              <span>销户</span>
+            </el-menu-item>
+            <el-menu-item index="modifyaccount">
+              <el-icon>
+                <Edit />
+              </el-icon>
+              <span>修改密码</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -117,10 +135,26 @@
               </el-table-column>
               <el-table-column fixed="right" label="操作" width="150">
                 <template #default="scope">
-                  <el-button link type="primary" size="small" @click=ConfirmUnfreeze>解冻</el-button>
+                  <el-button link type="primary" size="small" @click="this.InputPassordVisible = true">解冻</el-button>
                 </template>
               </el-table-column>
             </el-table>
+
+            <!--输入密码对话框-->
+            <el-dialog v-model="InputPassordVisible" title="输入密码验证" width="40%" align-center>
+              <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
+                密码：
+                <el-input v-model="formItems1.password" style="width: 12.5vw;" clearable />
+              </div>
+              <template #footer>
+                <span>
+                  <el-button @click="this.InputPassordVisible=false">取消</el-button>
+                  <el-button type="primary" @click="ConfirmUnfreeze">
+                    确定
+                  </el-button>
+                </span>
+              </template>
+            </el-dialog>
           </el-card>
         </el-main>
       </el-container>
@@ -136,9 +170,11 @@ import {ElMessage} from "element-plus";
 export default {
   data() {
     return {
+      InputPassordVisible: false,
       activeTab: 'tab1',
       formItems1:{
         accountId: '',
+        password: ''
       },
       // formItems1: [
       //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
@@ -185,6 +221,7 @@ export default {
       //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
       axios.post("/cashier/unfreeze", {
         accountId: this.formItems1.accountId,
+        password: this.formItems1.password,
         unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
       })
           .then(response => {
@@ -200,6 +237,9 @@ export default {
           .catch(error => {
             ElMessage.error("failed");
           })
+    },
+    DeleteToken(){
+      sessionStorage.clear()
     }
   }
 }

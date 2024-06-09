@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              挂失业务办理
+              开户业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -32,8 +32,8 @@
               <span class="history-trail">储蓄账户</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/account/savingaccount/reportloss">
-              <span class="history-trail">挂失</span>
+            <RouterLink to="/account/savingaccount/closure">
+              <span class="history-trail">销户</span>
             </RouterLink>
           </div>
         </el-main>
@@ -94,9 +94,9 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <el-card title="挂失" class="deposit_card">
+          <el-card title="开户" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="储蓄卡挂失" name="tab1">
+              <el-tab-pane label="销户" name="tab1">
                 <el-form
                     :label-position="left"
                     label-width="auto"
@@ -104,24 +104,16 @@
                     style="max-width: 600px"
                 >
                   <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                    <el-input v-model="formItems1.accountId" placeholder="请输入身份证号"/>
                   </el-form-item>
-                  <el-form-item label="密码">
+                  <el-form-item label="账户密码">
                     <el-input v-model="formItems1.password" placeholder="请输入密码"/>
                   </el-form-item>
-<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
-<!--                  <div class="form-label">{{ item.label }}</div>-->
-<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
-<!--                </div>-->
-                <el-button type="primary" @click="ConfirmReportLoss">确认</el-button>
+                  <el-form-item label="身份证号">
+                    <el-input v-model="formItems1.idNumber" placeholder="请输入身份证号"/>
+                  </el-form-item>
+                  <el-button type="primary" @click="ConfirmClosure">确认</el-button>
                 </el-form>
-              </el-tab-pane>
-              <el-tab-pane label="信用卡挂失" name="tab2">
-                <div v-for="(item, index) in formItems2" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >确认</el-button>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -134,43 +126,36 @@
 <script>
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {sha256} from "js-sha256";
+
 
 export default {
   data() {
     return {
       activeTab: 'tab1',
-      formItems1:{
+      formItems1: {
         accountId: '',
-        password: ''
-      },
-      // formItems1: [
-      //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
-      //   { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
-      // ],
-      formItems2: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        { label: '持卡人身份证号：', placeholder: '请输入持卡人身份证号' },
-      ]
+        idNumber: '',
+        password: '',
+      }
     };
   },
-  methods:{
-    ConfirmReportLoss(){
-      console.log("hello3")
-      axios.post("/cashier/reportLoss",{
-        accountId:this.formItems1.accountId,
-        password: this.formItems1.password
+  methods: {
+    ConfirmClosure() {
+      axios.post("/cashier/closeAccount", {
+        accountId: this.formItems1.accountId,
+        password: this.formItems1.password,
+        //password: sha256(this.formItems1.password),
+        idNumber: this.formItems1.idNumber
       })
-          .then(response=>{
-            if(response.data.code === 1){
-              ElMessage.success("挂失成功");
-              console.log(response.data);
-              //location.href = '/menu'
-            }else{
+          .then(response => {
+            if (response.data.code === 1) {
+              ElMessage.success("销户成功");
+            } else {
               ElMessage.error(response.data.message)
-              console.log(response.data);
             }
           })
-          .catch(error =>{
+          .catch(error => {
             ElMessage.error("failed");
           })
     },
@@ -179,6 +164,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -205,12 +191,6 @@ export default {
   padding: 0 20px;
 }
 
-.aside {
-  min-height: calc(100vh - 60px);
-  width: 180px;
-  background-color: red;
-}
-
 .title2 {
   background: url("../../../assets/figure2.jpg");
   height: 60px;
@@ -230,13 +210,12 @@ export default {
   font-weight: normal;
 }
 
-.content-card {
-  margin: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
 }
+
 
 .form-row {
   display: flex;
@@ -264,3 +243,5 @@ export default {
 
 /* 其他样式可以根据需要添加 */
 </style>
+
+

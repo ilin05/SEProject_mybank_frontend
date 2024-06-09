@@ -9,7 +9,7 @@
             <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
           </div >
           <RouterLink to="login">
-            <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+            <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
               <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
             </el-button>
           </RouterLink>
@@ -86,7 +86,12 @@ import { RouterView } from 'vue-router'
 import {UserFilled} from "@element-plus/icons-vue";
 
 export default {
-  components: {UserFilled}
+  components: {UserFilled},
+  methods:{
+    DeleteToken(){
+      sessionStorage.clear()
+    }
+  }
 }
 </script>
 

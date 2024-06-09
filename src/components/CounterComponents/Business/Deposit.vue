@@ -32,25 +32,55 @@
       </el-container>
 
       <el-container>
+        <el-aside class="aside" style="display: flex; color:#0f184d">
+          <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
+                   style="height:100%; width: 100%;" :router="true">
+            <el-menu-item index="deposit">
+              <el-icon>
+                <Reading />
+              </el-icon>
+              <span>存款</span>
+            </el-menu-item>
+            <el-menu-item index="withdraw">
+              <el-icon>
+                <Postcard />
+              </el-icon>
+              <span>取款</span>
+            </el-menu-item>
+            <el-menu-item index="transfer">
+              <el-icon>
+                <Tickets />
+              </el-icon>
+              <span>转账</span>
+            </el-menu-item>
+            <el-menu-item index="loan">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>贷款</span>
+            </el-menu-item>
+
+          </el-menu>
+        </el-aside>
         <el-main>
-            <el-card title="存款" class="deposit_card">
-              <el-tabs v-model="activeTab" type="border-card">
-                <el-tab-pane label="卡号存款" name="tab1">
-                  <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                    <div class="form-label">{{ item.label }}</div>
-                    <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                  </div>
-                  <el-button type="primary" >确认</el-button>
-                </el-tab-pane>
-                <el-tab-pane label="存折存款" name="tab2">
-                  <div v-for="(item, index) in formItems2" :key="index" class="form-row">
-                    <div class="form-label">{{ item.label }}</div>
-                    <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                  </div>
-                  <el-button type="primary" >确认</el-button>
-                </el-tab-pane>
-              </el-tabs>
-            </el-card>
+          <el-card title="存款" class="deposit_card">
+            <el-tabs v-model="activeTab" type="border-card">
+              <el-tab-pane label="卡号存款" name="tab1">
+                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
+                  <div class="form-label">{{ item.label }}</div>
+                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
+                </div>
+                <el-button type="primary" >确认</el-button>
+              </el-tab-pane>
+              <el-tab-pane label="存折存款" name="tab2">
+                <div v-for="(item, index) in formItems2" :key="index" class="form-row">
+                  <div class="form-label">{{ item.label }}</div>
+                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
+                </div>
+                <el-button type="primary" >确认</el-button>
+              </el-tab-pane>
+            </el-tabs>
+          </el-card>
         </el-main>
       </el-container>
     </el-container>
@@ -113,6 +143,12 @@ export default {
   font-weight: bold;
   font-size: xx-large;
   font-family: 'Microsoft YaHei';
+}
+
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
 }
 
 .history-trail {

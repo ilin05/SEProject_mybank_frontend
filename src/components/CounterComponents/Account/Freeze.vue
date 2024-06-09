@@ -11,7 +11,7 @@
               style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
         </div>
         <RouterLink to="login">
-          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
             <span
                 style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
           </el-button>
@@ -53,6 +53,12 @@
               </el-icon>
               <span>开户</span>
             </el-menu-item>
+            <el-menu-item index="queryaccount">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>查询账户信息</span>
+            </el-menu-item>
             <el-menu-item index="freeze">
               <el-icon>
                 <Postcard/>
@@ -67,15 +73,27 @@
             </el-menu-item>
             <el-menu-item index="reportloss">
               <el-icon>
-                <UserFilled/>
+                <CreditCard />
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
             <el-menu-item index="reissue">
               <el-icon>
-                <UserFilled/>
+                <Checked />
               </el-icon>
               <span>补发</span>
+            </el-menu-item>
+            <el-menu-item index="closure">
+              <el-icon>
+                <Delete />
+              </el-icon>
+              <span>销户</span>
+            </el-menu-item>
+            <el-menu-item index="modifyaccount">
+              <el-icon>
+                <Edit />
+              </el-icon>
+              <span>修改密码</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -97,6 +115,9 @@
                   </el-form-item>
                   <el-form-item label="冻结天数">
                     <el-input v-model="formItems1.unfreezeTime" placeholder="请输入冻结天数"/>
+                  </el-form-item>
+                  <el-form-item label="密码">
+                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
                   </el-form-item>
                   <el-button type="primary" @click="ConfirmFreeze">确认</el-button>
                 </el-form>
@@ -139,6 +160,7 @@ export default {
         accountId: '',
         reason: '',
         unfreezeTime: '',
+        password: ''
       },
       // formItems1: [
       //   { label: '银行卡号：', placeholder: '请输入银行卡号' },
@@ -162,7 +184,8 @@ export default {
       axios.post("/cashier/freeze", {
         accountId: this.formItems1.accountId,
         reason: this.formItems1.reason,
-        unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
+        unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss'),
+        password: this.formItems1.password
       })
           .then(response => {
             if (response.data.code === 1) {
@@ -177,6 +200,9 @@ export default {
           .catch(error => {
             ElMessage.error("failed");
           })
+    },
+    DeleteToken(){
+      sessionStorage.clear()
     }
   }
 };

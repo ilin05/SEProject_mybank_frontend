@@ -34,6 +34,36 @@
 <!--      转账金额过大可能需要身份验证      -->
 
       <el-container>
+        <el-aside class="aside" style="display: flex; color:#0f184d">
+          <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
+                   style="height:100%; width: 100%;" :router="true">
+            <el-menu-item index="deposit">
+              <el-icon>
+                <Reading />
+              </el-icon>
+              <span>存款</span>
+            </el-menu-item>
+            <el-menu-item index="withdraw">
+              <el-icon>
+                <Postcard />
+              </el-icon>
+              <span>取款</span>
+            </el-menu-item>
+            <el-menu-item index="transfer">
+              <el-icon>
+                <Tickets />
+              </el-icon>
+              <span>转账</span>
+            </el-menu-item>
+            <el-menu-item index="loan">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>贷款</span>
+            </el-menu-item>
+
+          </el-menu>
+        </el-aside>
         <el-main>
           <el-card title="转账" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
@@ -103,6 +133,12 @@ export default {
   font-weight: bold;
   font-size: xx-large;
   font-family: 'Microsoft YaHei';
+}
+
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
 }
 
 .history-trail {
