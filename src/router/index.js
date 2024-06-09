@@ -19,7 +19,7 @@ import AccountVue from "@/components/CounterComponents/Account/Account.vue"
 import OpenSavingAccountVue from "@/components/CounterComponents/Account/OpenSavingAccount.vue";
 import BusinessVue from "@/components/CounterComponents/Business/Business.vue";
 import CashierVue from "@/components/AdminComponents/Cashier/Cashier.vue";
-
+import CustomerQuery   from "@/components/CounterComponents/Customer/CustomerQuery.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +52,10 @@ const router = createRouter({
     {
       path: '/customer',
       redirect: '/customer/customerquery'
+    },
+    {
+      path:'/customer/customerquery',
+      component:CustomerQuery
     },
     {
       path: '/account/savingaccount',

@@ -70,61 +70,229 @@
           <el-card title="存款" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="定期取款" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
+                <div class="form-row">
+                  <div class="form-label">银行卡号:</div>
+                  <el-input class="form-input" :placeholder="银行账户ID" clearable v-model="accountIdToWithdrawFixedDeposit" />
                 </div>
-                <el-button type="primary" >查询</el-button>
+                <el-button type="primary" @click="queryFixedDeposit">定期查询</el-button>
               </el-tab-pane>
               <el-tab-pane label="活期取款" name="tab2">
-                <div v-for="(item, index) in formItems2" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
+                <div class="form-row">
+                  <div class="form-label">银行卡号：</div>
+                  <el-input class="form-input" :placeholder="银行账户ID" clearable v-model="accountIdToWithdrawDemandDeposit" />
                 </div>
-                <el-button type="primary" >查询</el-button>
+                <el-button type="primary" @click="queryDemandDeposit">活期查询</el-button>
               </el-tab-pane>
             </el-tabs>
           </el-card>
-          <el-card title="存款" class="deposit_card">
-            <el-table>
-              <el-table-column prop="date" label="存款日期">
+
+
+          <el-card title="存款" class="deposit_card" v-if="activeTab === 'tab1'">
+            <el-table :data="fixedDeposits">
+              <el-table-column prop="fixedDepositId" label="定期存款号">
               </el-table-column>
-              <el-table-column prop="type" label="存款金额">
+              <el-table-column prop="depositAmount" label="存款金额">
               </el-table-column>
-              <el-table-column prop="amount" label="存款种类">
+              <el-table-column prop="depositTime" label="存款时间">
               </el-table-column>
-              <el-table-column prop="due" label="是否到期">
+              <el-table-column prop="depositType" label="定期存款类型">
               </el-table-column>
-              <el-table-column prop="withdraw" label="点击取出">
+              <el-table-column prop="isRenewal" label="是否自动续期">
+              </el-table-column>
+              <el-table-column label="取款">
+                <template #default="scope">
+                  <el-button style="align-content: center" type="primary" :icon="CreditCard"
+                             @click="this.withdrawFixedDepositVisible=true,
+                     this.toWithdrawFixedDepositInfo.fixedDepositId=scope.row.fixedDepositId,
+                     this.toWithdrawFixedDepositInfo.accountId=scope.row.accountId"
+                  />
+                </template>
               </el-table-column>
             </el-table>
           </el-card>
+
+          <el-card title="存款" class="deposit_card" v-if="activeTab === 'tab2'">
+            <el-table :data="demandDeposit">
+              <el-table-column prop="accountId" label="账户ID">
+              </el-table-column>
+              <el-table-column prop="amount" label="账户活期存款">
+              </el-table-column>
+              <el-table-column label="取款">
+                <template #default="scope">
+                  <el-button style="align-content: center" type="primary" :icon="CreditCard"
+                             @click="this.withdrawDemandDepositVisible=true,
+                     this.toWithDrawDemandDepositInfo.accountId=scope.row.accountId"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+          <el-dialog v-model="withdrawFixedDepositVisible"  title="定期取款" align-center>
+            <el-form     :label-position="left"
+                         label-width="auto">
+              <el-form-item label="定期存款号">
+                <el-input v-model="toWithdrawFixedDepositInfo.fixedDepositId" disabled></el-input>
+              </el-form-item>
+              <el-form-item label="账户">
+                <el-input v-model="toWithdrawFixedDepositInfo.accountId " disabled></el-input>
+              </el-form-item>
+              <el-form-item label="取款金额">
+                <el-input v-model="toWithdrawFixedDepositInfo.amount" type="number" />
+              </el-form-item>
+              <el-form-item label="输入密码">
+                <el-input type="password" :prefix-icon="Lock" v-model="toWithdrawFixedDepositInfo.password"></el-input>
+              </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="withdrawFixedDepositVisible= false">取消</el-button>
+                    <el-button type="primary" @click="ConfirmWithDrawFixedDeposit" :disabled="toWithdrawFixedDepositInfo.amount<=0||toWithdrawFixedDepositInfo.password===''">确定</el-button>
+                </span>
+            </template>
+          </el-dialog>
+
+
+          <el-dialog v-model="withdrawDemandDepositVisible" title="活期取款" align-center>
+            <el-form     :label-position="left"
+                         label-width="auto">
+              <el-form-item label="账户">
+                <el-input v-model="toWithDrawDemandDepositInfo.accountId "  disabled></el-input>
+              </el-form-item>
+              <el-form-item label="取款金额">
+                <el-input v-model="toWithDrawDemandDepositInfo.amount"  type="number"/>
+              </el-form-item>
+              <el-form-item label="输入密码">
+                <el-input type="password" :prefix-icon="Lock"  v-model="toWithDrawDemandDepositInfo.password" ></el-input>
+              </el-form-item>
+
+
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="withdrawDemandDepositVisible= false">取消</el-button>
+                    <el-button type="primary" @click="ConfirmWithDrawDemandDeposit" :disabled="toWithDrawDemandDepositInfo.amount<=0||toWithDrawDemandDepositInfo.password===''">确定</el-button>
+                </span>
+            </template>
+          </el-dialog>
         </el-main>
       </el-container>
     </el-container>
   </div>
+
+
+
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+import axios from "axios";
+import {CreditCard, Edit, Lock} from "@element-plus/icons-vue";
+import {el} from "element-plus/es/locale/index";
+
 export default {
+  computed: {
+    CreditCard() {
+      return CreditCard
+    },
+    Lock() {
+      return Lock
+    },
+    el() {
+      return el
+    },
+    Edit() {
+      return Edit
+    }
+  },
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        // { label: '取款类型：', placeholder: '请选择类型' },
-        // { label: '取款金额：', placeholder: '请输入金额' },
-        // { label: '请输入密码：', placeholder: '等待用户输入' },
-
-      ],
-      formItems2: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        // { label: '取款类型：', placeholder: '请选择类型' },
-        // { label: '取款金额：', placeholder: '请输入金额' },
-        // { label: '请输入密码：', placeholder: '等待用户输入' },
-
-      ]
+      accountIdToWithdrawFixedDeposit:'',
+      accountIdToWithdrawDemandDeposit:'',
+      toWithdrawFixedDepositInfo:{
+        accountId: '',
+        password: '',
+        fixedDepositId: 0,
+        amount: 0.0
+      },
+      toWithDrawDemandDepositInfo:{
+        accountId: '',
+        password: '',
+        amount: 0.0
+      },
+      withdrawFixedDepositVisible:false,
+      withdrawDemandDepositVisible:false,
+      fixedDeposits:[],
+      demandDeposit:[],
     };
+  },
+  methods:{
+    queryFixedDeposit(){
+      axios.get("cashier/fixedDeposit",{params:{
+          accountId:this.accountIdToWithdrawFixedDeposit
+        }
+      })
+          .then(
+              response => {
+                this.fixedDeposits=[];
+                if(response.data.code == 0){
+                  ElMessage.error(response.data.message);
+                }
+                let fixedDeposits = response.data.payload;
+                fixedDeposits.forEach(item => {this.fixedDeposits.push(item);})
+              })
+    },
+    queryDemandDeposit(){
+      axios.get("cashier/accountInfo",{params:{
+          accountId:this.accountIdToWithdrawDemandDeposit
+        }
+      })
+          .then(
+              response => {
+                this.demandDeposit=[];
+                if(response.data.code == 0){
+                  ElMessage.error(response.data.message);
+                }
+                let accountInfo = response.data.payload;
+                let demandDeposit={
+                  accountId:'',
+                  amount:0.0
+                }
+                demandDeposit.accountId=accountInfo.accountId;
+                demandDeposit.amount=accountInfo.balance;
+                console.log(demandDeposit)
+                this.demandDeposit.push(demandDeposit)
+              })
+    },
+    ConfirmWithDrawFixedDeposit(){
+      axios.post("/cashier/withdrawFixed",
+          {
+            accountId: this.toWithdrawFixedDepositInfo.accountId,
+            password: this.toWithdrawFixedDepositInfo.password,
+            fixedDepositId:this.toWithdrawFixedDepositInfo.fixedDepositId,
+            amount: +this.toWithdrawFixedDepositInfo.amount
+          }).then(response=>{
+        if(response.data.code)
+          ElMessage.success("取款成功")
+        else ElMessage.error(response.data.message)// 显示消息提醒
+        this.withdrawFixedDepositVisible = false // 将对话框设置为不可见
+        this.queryFixedDeposit() // 重新查询借书证以刷新页面
+      })
+    },
+    ConfirmWithDrawDemandDeposit(){
+      axios.post("/cashier/withdrawDemand",
+          {
+            accountId: this.toWithDrawDemandDepositInfo.accountId,
+            password: this.toWithDrawDemandDepositInfo.password,
+            amount: +this.toWithDrawDemandDepositInfo.amount
+          }).then(response=>{
+        if(response.data.code)
+          ElMessage.success("取款成功")
+        else ElMessage.error(response.data.message)// 显示消息提醒
+        this.withdrawDemandDepositVisible = false // 将对话框设置为不可见
+        this.queryDemandDeposit() // 重新查询借书证以刷新页面
+      })
+    }
   }
 };
 </script>

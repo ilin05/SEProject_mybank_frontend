@@ -67,24 +67,92 @@
           </el-menu>
         </el-aside>
         <el-main>
-            <el-card title="存款" class="deposit_card">
-              <el-tabs v-model="activeTab" type="border-card">
-                <el-tab-pane label="卡号存款" name="tab1">
-                  <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                    <div class="form-label">{{ item.label }}</div>
-                    <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                  </div>
-                  <el-button type="primary" >确认</el-button>
-                </el-tab-pane>
-                <el-tab-pane label="存折存款" name="tab2">
-                  <div v-for="(item, index) in formItems2" :key="index" class="form-row">
-                    <div class="form-label">{{ item.label }}</div>
-                    <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                  </div>
-                  <el-button type="primary" >确认</el-button>
-                </el-tab-pane>
-              </el-tabs>
-            </el-card>
+          <el-card title="存款" class="deposit_card">
+            <el-tabs v-model="activeTab" type="border-card">
+              <el-tab-pane label="卡号存款" name="tab1">
+                <el-form-item label="活期/定期">
+                  <el-select v-model="depositType" placeholder="选择存款类型">
+                    <el-option label="定期存款" value="fixed"></el-option>
+                    <el-option label="活期存款" value="demand"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form v-if="depositType==='fixed'"
+                         label-position="left"
+                         label-width="auto">
+                  <el-form-item label="银行卡号">
+                    <el-input  v-model="fixedDepositInfoForCard.accountId"></el-input>
+                  </el-form-item>
+                  <el-form-item label="存款金额">
+                    <el-input v-model="fixedDepositInfoForCard.amount" type="number"></el-input>
+                  </el-form-item>
+                  <el-form-item label="定期存款类型">
+                    <el-select v-model="fixedDepositInfoForCard.fixedDepositType">
+                      <el-option v-for="depositType in fixedDepositTypes "  :value="depositType.depositType"> 定期存款类型 ：{{depositType.depositType}}；定期存款期限：{{depositType.depositDuration+" "}}月；定期存款利率：{{depositType.depositRate}}</el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="输入密码">
+                    <el-input type="password" :prefix-icon="Lock" v-model="fixedDepositInfoForCard.password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary" @click="newFixedDeposit(this.fixedDepositInfoForCard.accountId,this.fixedDepositInfoForCard.password,this.fixedDepositInfoForCard.fixedDepositType,this.fixedDepositInfoForCard.amount)" :disabled="this.fixedDepositInfoForCard.amount<=0||this.fixedDepositInfoForCard.accountId===''||this.fixedDepositInfoForCard.password===''||this.fixedDepositInfoForCard.fixedDepositType===''">确认</el-button>
+                </el-form>
+                <el-form v-if="depositType==='demand'"
+                         label-position="left"
+                         label-width="auto">
+                  <el-form-item label="银行卡号">
+                    <el-input  v-model="demandDepositInfoForCard.accountId"></el-input>
+                  </el-form-item>
+                  <el-form-item label="存款金额">
+                    <el-input v-model="demandDepositInfoForCard.amount" type="number"></el-input>
+                  </el-form-item>
+                  <el-form-item label="输入密码">
+                    <el-input type="password" :prefix-icon="Lock" v-model="demandDepositInfoForCard.password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary" @click="newDemandDeposit(this.demandDepositInfoForCard.accountId,this.demandDepositInfoForCard.password,this.demandDepositInfoForCard.amount)" :disabled="this.demandDepositInfoForCard.amount<=0||this.demandDepositInfoForCard.accountId===''||this.demandDepositInfoForCard.password===''">确认</el-button>
+                </el-form>
+              </el-tab-pane>
+              <el-tab-pane label="存折存款" name="tab2">
+                <el-form-item label="活期/定期">
+                  <el-select v-model="depositType" placeholder="选择存款类型">
+                    <el-option label="定期存款" value="fixed"></el-option>
+                    <el-option label="活期存款" value="demand"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form v-if="depositType==='fixed'"
+                         label-position="left"
+                         label-width="auto">
+                  <el-form-item label="存折号">
+                    <el-input  v-model="fixedDepositInfoForBook.accountId"></el-input>
+                  </el-form-item>
+                  <el-form-item label="存款金额">
+                    <el-input v-model="fixedDepositInfoForBook.amount" type="number"></el-input>
+                  </el-form-item>
+                  <el-form-item label="定期存款类型">
+                    <el-select v-model="fixedDepositInfoForBook.fixedDepositType">
+                      <el-option v-for="depositType in fixedDepositTypes "  :value="depositType.depositType"> 定期存款类型 ：{{depositType.depositType}}；定期存款期限：{{depositType.depositDuration+" "}}月；定期存款利率：{{depositType.depositRate}}</el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="输入密码">
+                    <el-input type="password" :prefix-icon="Lock" v-model="fixedDepositInfoForBook.password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary"  @click="newFixedDeposit(this.fixedDepositInfoForBook.accountId,this.fixedDepositInfoForBook.password,this.fixedDepositInfoForBook.fixedDepositType,this.fixedDepositInfoForBook.amount)"  :disabled="this.fixedDepositInfoForBook.amount<=0||this.fixedDepositInfoForBook.accountId===''||this.fixedDepositInfoForBook.password===''||this.fixedDepositInfoForBook.fixedDepositType===''">确认</el-button>
+                </el-form>
+                <el-form v-if="depositType==='demand'"
+                         label-position="left"
+                         label-width="auto">
+                  <el-form-item label="存折号">
+                    <el-input  v-model="demandDepositInfoForBook.accountId"></el-input>
+                  </el-form-item>
+                  <el-form-item label="存款金额">
+                    <el-input v-model="demandDepositInfoForBook.amount" type="number"></el-input>
+                  </el-form-item>
+                  <el-form-item label="输入密码">
+                    <el-input type="password" :prefix-icon="Lock" v-model="demandDepositInfoForBook.password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary" @click="newDemandDeposit(this.demandDepositInfoForBook.accountId,this.demandDepositInfoForBook.password,this.demandDepositInfoForBook.amount)" :disabled="this.demandDepositInfoForBook.amount<=0||this.demandDepositInfoForBook.accountId===''||this.demandDepositInfoForBook.password===''">确认</el-button>
+                </el-form>
+              </el-tab-pane>
+            </el-tabs>
+          </el-card>
         </el-main>
       </el-container>
     </el-container>
@@ -92,23 +160,97 @@
 </template>
 
 <script>
+import {Lock} from "@element-plus/icons-vue";
+import {el} from "element-plus/es/locale/index";
+import {ElMessage} from "element-plus";
+import axios from "axios";
+
 export default {
+  computed: {
+    Lock() {
+      return Lock
+    },
+    el() {
+      return el
+    }
+  },
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '银行卡号：', placeholder: '请输入银行卡号' },
-        { label: '存款币种：', placeholder: '请选择币种' },
-        { label: '存款类型：', placeholder: '请选择类型' },
-        { label: '存款金额：', placeholder: '请输入金额' }
-      ],
-      formItems2: [
-        { label: '存折号：', placeholder: '请输入存折号' },
-        { label: '存款币种：', placeholder: '请选择币种' },
-        { label: '存款类型：', placeholder: '请选择类型' },
-        { label: '存款金额：', placeholder: '请输入金额' }
-      ]
+      depositType:'fixed',//demand
+      fixedDepositInfoForCard:{
+        accountId:'',
+        fixedDepositType:'',
+        amount:0.0,
+        password:''
+      },
+      fixedDepositInfoForBook:{
+        accountId:'',
+        fixedDepositType:'',
+        amount:0.0,
+        password:''
+      },
+      demandDepositInfoForCard:{
+        accountId:'',
+        amount:0.0,
+        password:''
+      },
+      demandDepositInfoForBook:{
+        accountId:'',
+        amount:0.0,
+        password:''
+      },
+      fixedDepositTypes:[{
+        depositType:'',
+        depositDuration:0,
+        depositRate:0.0
+      }]
+
     };
+  },
+  methods:{
+    queryfixedDepositTypes(){
+      axios.get("cashier/fixedDepositType")
+          .then(response=>{
+            this.fiixedDepositTypes =[]
+            if(response.data.code){
+              let fixedDepositTypes=response.data.payload;
+              fixedDepositTypes.forEach(item => {this.fixedDepositTypes.push(item);})
+              console.log(this.fixedDepositTypes);
+            }
+            else ElMessage.error(response.data.message)
+
+          })
+    },
+    newFixedDeposit(accountId,password,depositType,amount){
+      axios.post("/cashier/fixedDeposit",
+          {
+            accountId: accountId,
+            password: password,
+            depositType:depositType,
+            amount:amount
+          }).then(response=>{
+        if(response.data.code)
+          ElMessage.success("定期存款成功")
+        else ElMessage.error(response.data.message)// 显示消息提醒
+      })
+    },
+    newDemandDeposit(accountId,password,amount){
+      axios.post("/cashier/demandDeposit",
+          {
+            accountId: accountId,
+            password: password,
+            amount:amount
+          }).then(response=>{
+        if(response.data.code)
+          ElMessage.success("活期存款成功")
+        else ElMessage.error(response.data.message)// 显示消息提醒
+      })
+    }
+  },
+  mounted() {
+    this.fixedDepositTypes=[];
+    this.queryfixedDepositTypes();
   }
 };
 </script>

@@ -72,11 +72,22 @@
           <el-card title="转账" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="卡号转账" name="tab1">
-                <div v-for="(item, index) in formItems1" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >确认</el-button>
+                <el-form     :label-position="left"
+                             label-width="auto">
+                  <el-form-item label="转出卡号">
+                    <el-input  v-model="transferInfo.cardId"></el-input>
+                  </el-form-item>
+                  <el-form-item label="转入卡号">
+                    <el-input v-model="transferInfo.moneyGoes"></el-input>
+                  </el-form-item>
+                  <el-form-item label="转账金额" >
+                    <el-input v-model="transferInfo.transactionAmount" type="number"></el-input>
+                  </el-form-item>
+                  <el-form-item label="输入密码">
+                    <el-input type="password" :prefix-icon="Lock" v-model="transferInfo.password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary" @click="confirmTransfer" :disabled="this.transferInfo.transactionAmount<=0||this.transferInfo.cardId===''||this.transferInfo.password===''||this.transferInfo.moneyGoes===''">确认</el-button>
+                </el-form>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -87,22 +98,50 @@
 </template>
 
 <script>
+import {Edit, Lock} from "@element-plus/icons-vue";
+import {el} from "element-plus/es/locale/index";
+import axios from "axios";
+import {ElMessage} from "element-plus";
+
 export default {
+  computed: {
+    Lock() {
+      return Lock
+    },
+    el() {
+      return el
+    }
+  },
   data() {
     return {
       activeTab: 'tab1',
-      formItems1: [
-        { label: '转出卡号：', placeholder: '请输入银行卡号' },
-        { label: '转入卡号：', placeholder: '请输入银行卡号' },
-        { label: '转账金额：', placeholder: '请输入金额' },
-        { label: '转出卡号密码：', placeholder: '等待客户输入……' },
-      ],
+      transferInfo:{
+        cardId:'',
+        password:'',
+        transactionAmount:0.0,
+        moneyGoes:''
+      }
 
     };
+  },
+  methods:{
+    confirmTransfer(){
+      axios.post("/cashier/transfer",
+          {
+            cardId:this.transferInfo.cardId,
+            password:this.transferInfo.password,
+            transactionAmount:this.transferInfo.transactionAmount,
+            moneyGoes:this.transferInfo.moneyGoes
+          }).then(response=>{
+        if(response.data.code)
+          ElMessage.success("转账成功")
+        else ElMessage.error(response.data.message)// 显示消息提醒
+      })
+    }
   }
+
 };
 </script>
-
 <style scoped>
 /* 将样式移动到<style>标签中，并使用类选择器 */
 .main {
