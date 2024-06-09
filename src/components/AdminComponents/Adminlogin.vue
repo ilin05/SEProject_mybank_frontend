@@ -110,10 +110,12 @@ export default {
         password:this.adminLoginInfo.password,
       })
           .then(response=>{
-            if(response.data.code ===1){
+            if(response.data.code === 1){
               ElMessage.success("登录成功");
-              sessionStorage.setItem("token",response.data.payload);
-              router.push("/adminmenu");
+              sessionStorage.setItem("token", response.data.payload);
+              router.push('/adminmenu');
+            }else{
+              ElMessage.error(response.data)
             }
           })
           .catch(error =>{
