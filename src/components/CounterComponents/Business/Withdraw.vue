@@ -339,6 +339,12 @@ export default {
   font-family: 'Microsoft YaHei';
 }
 
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
+}
+
 .history-trail {
   margin-left: 30px;
   font-size: medium;

@@ -7,8 +7,8 @@
           <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
           <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
         </div >
-        <RouterLink to="login">
-          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+        <RouterLink to="/login">
+          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
             <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
           </el-button>
         </RouterLink>
@@ -18,75 +18,101 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              转账业务办理
+              开户业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/business">
-              <span class="history-trail">业务</span>
+            <RouterLink to="/account">
+              <span class="history-trail">账户</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/business/transfer">
-              <span class="history-trail">转账业务</span>
+            <RouterLink to="/account/savingaccount">
+              <span class="history-trail">储蓄账户</span>
+            </RouterLink>
+            <span class="history-trail"> > </span>
+            <RouterLink to="/account/savingaccount/closure">
+              <span class="history-trail">销户</span>
             </RouterLink>
           </div>
         </el-main>
       </el-container>
 
-<!--      转账金额过大可能需要身份验证      -->
-
       <el-container>
         <el-aside class="aside" style="display: flex; color:#0f184d">
           <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
                    style="height:100%; width: 100%;" :router="true">
-            <el-menu-item index="deposit">
+            <el-menu-item index="openaccount">
               <el-icon>
                 <Reading />
               </el-icon>
-              <span>存款</span>
+              <span>开户</span>
             </el-menu-item>
-            <el-menu-item index="withdraw">
-              <el-icon>
-                <Postcard />
-              </el-icon>
-              <span>取款</span>
-            </el-menu-item>
-            <el-menu-item index="transfer">
-              <el-icon>
-                <Tickets />
-              </el-icon>
-              <span>转账</span>
-            </el-menu-item>
-            <el-menu-item index="loan">
+            <el-menu-item index="queryaccount">
               <el-icon>
                 <UserFilled />
               </el-icon>
-              <span>贷款</span>
+              <span>查询账户信息</span>
             </el-menu-item>
-
+            <el-menu-item index="freeze">
+              <el-icon>
+                <Postcard />
+              </el-icon>
+              <span>冻结</span>
+            </el-menu-item>
+            <el-menu-item index="unfreeze">
+              <el-icon>
+                <Tickets />
+              </el-icon>
+              <span>解冻</span>
+            </el-menu-item>
+            <el-menu-item index="reportloss">
+              <el-icon>
+                <CreditCard />
+              </el-icon>
+              <span>挂失</span>
+            </el-menu-item>
+            <el-menu-item index="reissue">
+              <el-icon>
+                <Checked />
+              </el-icon>
+              <span>补发</span>
+            </el-menu-item>
+            <el-menu-item index="closure">
+              <el-icon>
+                <Delete />
+              </el-icon>
+              <span>销户</span>
+            </el-menu-item>
+            <el-menu-item index="modifyaccount">
+              <el-icon>
+                <Edit />
+              </el-icon>
+              <span>修改密码</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>
-          <el-card title="转账" class="deposit_card">
+          <el-card title="开户" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="卡号转账" name="tab1">
-                <el-form     :label-position="left"
-                             label-width="auto">
-                  <el-form-item label="转出卡号">
-                    <el-input  v-model="transferInfo.cardId"></el-input>
+              <el-tab-pane label="销户" name="tab1">
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入身份证号"/>
                   </el-form-item>
-                  <el-form-item label="转入卡号">
-                    <el-input v-model="transferInfo.moneyGoes"></el-input>
+                  <el-form-item label="账户密码">
+                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
                   </el-form-item>
-                  <el-form-item label="转账金额" >
-                    <el-input v-model="transferInfo.transactionAmount" type="number"></el-input>
+                  <el-form-item label="身份证号">
+                    <el-input v-model="formItems1.idNumber" placeholder="请输入身份证号"/>
                   </el-form-item>
-                  <el-form-item label="输入密码">
-                    <el-input type="password" :prefix-icon="Lock" v-model="transferInfo.password"></el-input>
-                  </el-form-item>
-                  <el-button type="primary" @click="confirmTransfer" :disabled="this.transferInfo.transactionAmount<=0||this.transferInfo.cardId===''||this.transferInfo.password===''||this.transferInfo.moneyGoes===''">确认</el-button>
+                  <el-button type="primary" @click="ConfirmClosure">确认</el-button>
                 </el-form>
               </el-tab-pane>
             </el-tabs>
@@ -98,50 +124,49 @@
 </template>
 
 <script>
-import {Edit, Lock} from "@element-plus/icons-vue";
-import {el} from "element-plus/es/locale/index";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {sha256} from "js-sha256";
+
 
 export default {
-  computed: {
-    Lock() {
-      return Lock
-    },
-    el() {
-      return el
-    }
-  },
   data() {
     return {
       activeTab: 'tab1',
-      transferInfo:{
-        cardId:'',
-        password:'',
-        transactionAmount:0.0,
-        moneyGoes:''
+      formItems1: {
+        accountId: '',
+        idNumber: '',
+        password: '',
       }
-
     };
   },
-  methods:{
-    confirmTransfer(){
-      axios.post("/cashier/transfer",
-          {
-            cardId:this.transferInfo.cardId,
-            password:this.transferInfo.password,
-            transactionAmount:this.transferInfo.transactionAmount,
-            moneyGoes:this.transferInfo.moneyGoes
-          }).then(response=>{
-        if(response.data.code)
-          ElMessage.success("转账成功")
-        else ElMessage.error(response.data.message)// 显示消息提醒
+  methods: {
+    ConfirmClosure() {
+      axios.post("/cashier/closeAccount", {
+        accountId: this.formItems1.accountId,
+        password: this.formItems1.password,
+        //password: sha256(this.formItems1.password),
+        idNumber: this.formItems1.idNumber
       })
+          .then(response => {
+            if (response.data.code === 1) {
+              ElMessage.success("销户成功");
+            } else {
+              ElMessage.error(response.data.message)
+            }
+          })
+          .catch(error => {
+            ElMessage.error("failed");
+          })
+    },
+    DeleteToken(){
+      sessionStorage.clear()
     }
   }
-
 };
+
 </script>
+
 <style scoped>
 /* 将样式移动到<style>标签中，并使用类选择器 */
 .main {
@@ -166,12 +191,6 @@ export default {
   padding: 0 20px;
 }
 
-.aside {
-  min-height: calc(100vh - 60px);
-  width: 180px;
-  background-color: red;
-}
-
 .title2 {
   background: url("../../../assets/figure2.jpg");
   height: 60px;
@@ -184,12 +203,6 @@ export default {
   font-family: 'Microsoft YaHei';
 }
 
-.aside {
-  min-height: calc(100vh - 60px);
-  width: 180px;
-  background-color: red;
-}
-
 .history-trail {
   margin-left: 30px;
   font-size: medium;
@@ -197,13 +210,12 @@ export default {
   font-weight: normal;
 }
 
-.content-card {
-  margin: 20px;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
 }
+
 
 .form-row {
   display: flex;
@@ -231,3 +243,5 @@ export default {
 
 /* 其他样式可以根据需要添加 */
 </style>
+
+

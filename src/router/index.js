@@ -18,6 +18,10 @@ import LoanVue from "@/components/CounterComponents/Business/Loan.vue";
 import AccountVue from "@/components/CounterComponents/Account/Account.vue"
 import OpenSavingAccountVue from "@/components/CounterComponents/Account/OpenSavingAccount.vue";
 import BusinessVue from "@/components/CounterComponents/Business/Business.vue";
+import Closure from "@/components/CounterComponents/Account/Closure.vue";
+import ModifyAccount from "@/components/CounterComponents/Account/ModifyAccount.vue";
+import QueryAccount from "@/components/CounterComponents/Account/QueryAccount.vue";
+
 import CashierVue from "@/components/AdminComponents/Cashier/Cashier.vue";
 import CustomerQuery   from "@/components/CounterComponents/Customer/CustomerQuery.vue";
 
@@ -121,6 +125,18 @@ const router = createRouter({
       path: '/account/savingaccount/reissue',
       component: ReissueVue
     },
+    {
+      path: '/account/savingaccount/closure',
+      component: Closure
+    },
+    {
+      path: '/account/savingaccount/modifyaccount',
+      component: ModifyAccount
+    },
+    {
+      path: '/account/savingaccount/queryaccount',
+      component: QueryAccount
+    },
 
       //cashier底下的索引
     {
@@ -132,9 +148,10 @@ const router = createRouter({
 router.beforeEach((to, from, next)=>{
   if(!sessionStorage.getItem("token") && to.path !== '/login'){
     next({path: '/login'})
-  }else{
+  } else {
     next()
   }
 })
+
 
 export default router

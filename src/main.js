@@ -7,6 +7,8 @@ import App from './App.vue'
 import router from './router'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import {sha256} from "js-sha256";
+import SHA256 from 'crypto-js/sha256';
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -19,6 +21,11 @@ axios.defaults.baseURL = 'http://10.194.59.163:8000';
 axios.interceptors.request.use( config =>{
     const token = sessionStorage.getItem('token')
     if(token) config.headers.Authorization = token
+    if(config.data && config.data.password) {
+        const hashPassword = SHA256(config.data.password).toString();
+        //const hashPassword = sha256(config.data.password);
+        config.data.password = hashPassword
+    }
     return config
 }, error => {
     return Promise.reject(error)
@@ -26,7 +33,7 @@ axios.interceptors.request.use( config =>{
 axios.interceptors.response.use( response => {
     if(response.data.code === 0 && response.data.message === 'NOT_LOGIN') {
         sessionStorage.removeItem('token')
-        alert("deng lu guo qi")
+        alert("登陆过期")
         router.push('/login')
     }
     return response

@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              储蓄账户
+              开户业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -31,6 +31,10 @@
             <RouterLink to="/account/savingaccount">
               <span class="history-trail">储蓄账户</span>
             </RouterLink>
+            <span class="history-trail"> > </span>
+            <RouterLink to="/account/savingaccount/modifyaccount">
+              <span class="history-trail">修改账户信息</span>
+            </RouterLink>
           </div>
         </el-main>
       </el-container>
@@ -39,49 +43,49 @@
         <el-aside class="aside" style="display: flex; color:#0f184d">
           <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
                    style="height:100%; width: 100%;" :router="true">
-            <el-menu-item index="savingaccount/openaccount">
+            <el-menu-item index="openaccount">
               <el-icon>
                 <Reading />
               </el-icon>
               <span>开户</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/queryaccount">
+            <el-menu-item index="queryaccount">
               <el-icon>
                 <UserFilled />
               </el-icon>
               <span>查询账户信息</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/freeze">
+            <el-menu-item index="freeze">
               <el-icon>
                 <Postcard />
               </el-icon>
               <span>冻结</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/unfreeze">
+            <el-menu-item index="unfreeze">
               <el-icon>
                 <Tickets />
               </el-icon>
               <span>解冻</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/reportloss">
+            <el-menu-item index="reportloss">
               <el-icon>
                 <CreditCard />
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/reissue">
+            <el-menu-item index="reissue">
               <el-icon>
                 <Checked />
               </el-icon>
               <span>补发</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/closure">
+            <el-menu-item index="closure">
               <el-icon>
                 <Delete />
               </el-icon>
               <span>销户</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/modifyaccount">
+            <el-menu-item index="modifyaccount">
               <el-icon>
                 <Edit />
               </el-icon>
@@ -89,25 +93,87 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
+        <el-main>
+          <el-card title="开户" class="deposit_card">
+            <el-tabs v-model="activeTab" type="border-card">
+              <el-tab-pane label="销户" name="tab1">
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入身份证号"/>
+                  </el-form-item>
+                  <el-form-item label="原本密码">
+                    <el-input type="password" v-model="formItems1.oldPassword" placeholder="请输入原本的密码"/>
+                  </el-form-item>
+                  <el-form-item label="新密码">
+                    <el-input type="password" v-model="formItems1.newPassword1" placeholder="请输入新密码"/>
+                  </el-form-item>
+                  <el-form-item label="新密码">
+                    <el-input type="password" v-model="formItems1.newPassword2" placeholder="请再次输入新密码"/>
+                  </el-form-item>
 
+                  <el-button type="primary" @click="ConfirmModifyAccount">确认</el-button>
+                </el-form>
+              </el-tab-pane>
+            </el-tabs>
+          </el-card>
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import {ElMessage} from "element-plus";
+
+
 export default {
   data() {
     return {
-
+      activeTab: 'tab1',
+      formItems1: {
+        accountId: '',
+        oldPassword: '',
+        newPassword1: '',
+        newPassword2: '',
+      }
     };
   },
-  methods:{
+  methods: {
+    ConfirmModifyAccount() {
+      if(this.formItems1.newPassword1 !== this.formItems1.newPassword2){
+        ElMessage.error("两次输入的新密码不同，请重新输入！")
+      }else{
+        axios.post("/cashier/modifyPassword", {
+          accountId: this.formItems1.accountId,
+          oldPassword: this.formItems1.oldPassword,
+          //oldPassword: sha256(this.formItems1.oldPassword),
+          newPassword: this.formItems1.newPassword1,
+          //newPassword: sha256(this.formItems1.newPassword),
+        })
+            .then(response => {
+              if (response.data.code === 1) {
+                ElMessage.success("密码修改成功");
+              } else {
+                ElMessage.error(response.data.message)
+              }
+            })
+            .catch(error => {
+              ElMessage.error("failed");
+            })
+      }
+    },
     DeleteToken(){
       sessionStorage.clear()
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -186,3 +252,5 @@ export default {
 
 /* 其他样式可以根据需要添加 */
 </style>
+
+

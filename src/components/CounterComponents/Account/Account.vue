@@ -9,7 +9,7 @@
           <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
           <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
         </div >
-        <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+        <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
           <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
         </el-button>
       </el-header>
@@ -82,6 +82,11 @@ export default {
         { label: '账户密码：', placeholder: '等待用户输入' },
       ],
     };
+  },
+  methods:{
+    DeleteToken(){
+      sessionStorage.clear()
+    }
   }
 };
 </script>

@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              储蓄账户
+              解冻业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -31,6 +31,10 @@
             <RouterLink to="/account/savingaccount">
               <span class="history-trail">储蓄账户</span>
             </RouterLink>
+            <span class="history-trail"> > </span>
+            <RouterLink to="/account/savingaccount/queryaccount">
+              <span class="history-trail">解冻</span>
+            </RouterLink>
           </div>
         </el-main>
       </el-container>
@@ -39,49 +43,49 @@
         <el-aside class="aside" style="display: flex; color:#0f184d">
           <el-menu active-text-color="#ffd04b" background-color="rgb(17, 71, 117)" default-active="1" text-color="#fff"
                    style="height:100%; width: 100%;" :router="true">
-            <el-menu-item index="savingaccount/openaccount">
+            <el-menu-item index="openaccount">
               <el-icon>
                 <Reading />
               </el-icon>
               <span>开户</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/queryaccount">
+            <el-menu-item index="queryaccount">
               <el-icon>
                 <UserFilled />
               </el-icon>
               <span>查询账户信息</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/freeze">
+            <el-menu-item index="freeze">
               <el-icon>
                 <Postcard />
               </el-icon>
               <span>冻结</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/unfreeze">
+            <el-menu-item index="unfreeze">
               <el-icon>
                 <Tickets />
               </el-icon>
               <span>解冻</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/reportloss">
+            <el-menu-item index="reportloss">
               <el-icon>
                 <CreditCard />
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/reissue">
+            <el-menu-item index="reissue">
               <el-icon>
                 <Checked />
               </el-icon>
               <span>补发</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/closure">
+            <el-menu-item index="closure">
               <el-icon>
                 <Delete />
               </el-icon>
               <span>销户</span>
             </el-menu-item>
-            <el-menu-item index="savingaccount/modifyaccount">
+            <el-menu-item index="modifyaccount">
               <el-icon>
                 <Edit />
               </el-icon>
@@ -89,25 +93,114 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
-
+        <el-main>
+          <el-card title="解冻" class="deposit_card">
+            <el-tabs v-model="activeTab" type="border-card">
+              <el-tab-pane label="储蓄卡解冻" name="tab1">
+                <el-form
+                    :label-position="left"
+                    label-width="auto"
+                    :model="formItems1"
+                    style="max-width: 600px"
+                >
+                  <el-form-item label="银行卡号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  </el-form-item>
+                  <el-button type="primary" @click="ConfirmQuery">查询</el-button>
+                </el-form>
+              </el-tab-pane>
+            </el-tabs>
+          </el-card>
+          <el-card title="账户信息查询" class="deposit_card">
+            <el-table :data="queryResult">
+              <el-table-column prop="accountId" label="银行卡号">
+              </el-table-column>
+              <el-table-column prop="customerId" label="用户ID">
+              </el-table-column>
+              <el-table-column prop="customerName" label="用户姓名">
+              </el-table-column>
+              <el-table-column prop="idNumber" label="身份证号">
+              </el-table-column>
+              <el-table-column prop="address" label="地址">
+              </el-table-column>
+              <el-table-column prop="phoneNumber" label="电话">
+              </el-table-column>
+              <el-table-column prop="balance" label="账户余额">
+              </el-table-column>
+              <el-table-column prop="openTime" label="开户时间">
+              </el-table-column>
+              <el-table-column prop="openAmount" label="开户金额">
+              </el-table-column>
+              <el-table-column prop="freezeState" label="是否冻结">
+              </el-table-column>
+              <el-table-column prop="lossState" label="是否挂失">
+              </el-table-column>
+              <el-table-column prop="deleted" label="是否已销户">
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import dayjs from "dayjs";
+import {ElMessage} from "element-plus";
+
 export default {
   data() {
     return {
-
+      activeTab: 'tab1',
+      formItems1:{
+        accountId: '',
+      },
+      queryResult:[{
+        accountId:'',
+        customerId:'',
+        customerName:'',
+        idNumber: '',
+        address: '',
+        phoneNumber:'',
+        balance:'',
+        openTime:'',
+        openAmount:'',
+        freezeState:'',
+        lossState:'',
+        deleted:'',
+      }]
     };
   },
   methods:{
+    ConfirmQuery(){
+      this.queryResult = []
+      axios.get("/cashier/accountInfo",
+          {params:{
+              accountId: this.formItems1.accountId
+            }
+          })
+          .then(response => {
+            if (response.data.code === 1) {
+              this.queryResult.push(response.data.payload)
+              ElMessage.success("查询成功");
+              console.log(response.data);
+              //location.href = '/menu'
+            } else {
+              ElMessage.error(response.data.message)
+              console.log(response.data);
+            }
+          })
+          .catch(error => {
+            ElMessage.error("failed");
+          })
+    },
     DeleteToken(){
       sessionStorage.clear()
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -146,17 +239,17 @@ export default {
   font-family: 'Microsoft YaHei';
 }
 
+.aside {
+  min-height: calc(100vh - 60px);
+  width: 180px;
+  background-color: red;
+}
+
 .history-trail {
   margin-left: 30px;
   font-size: medium;
   color: #ffffff;
   font-weight: normal;
-}
-
-.aside {
-  min-height: calc(100vh - 60px);
-  width: 180px;
-  background-color: red;
 }
 
 

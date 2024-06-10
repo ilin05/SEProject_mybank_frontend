@@ -8,7 +8,7 @@
           <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
         </div >
         <RouterLink to="/login">
-          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
             <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
           </el-button>
         </RouterLink>
@@ -49,6 +49,12 @@
               </el-icon>
               <span>开户</span>
             </el-menu-item>
+            <el-menu-item index="queryaccount">
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>查询账户信息</span>
+            </el-menu-item>
             <el-menu-item index="freeze">
               <el-icon>
                 <Postcard />
@@ -63,15 +69,27 @@
             </el-menu-item>
             <el-menu-item index="reportloss">
               <el-icon>
-                <UserFilled />
+                <CreditCard />
               </el-icon>
               <span>挂失</span>
             </el-menu-item>
             <el-menu-item index="reissue">
               <el-icon>
-                <UserFilled />
+                <Checked />
               </el-icon>
               <span>补发</span>
+            </el-menu-item>
+            <el-menu-item index="closure">
+              <el-icon>
+                <Delete />
+              </el-icon>
+              <span>销户</span>
+            </el-menu-item>
+            <el-menu-item index="modifyaccount">
+              <el-icon>
+                <Edit />
+              </el-icon>
+              <span>修改密码</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
@@ -127,6 +145,7 @@
 <script>
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {sha256} from "js-sha256";
 
 
 export default {
@@ -146,12 +165,14 @@ export default {
   methods:{
     ConfirmOpenAccount(){
       console.log("hello2")
+      console.log(this.hashString(this.formItems1.password,))
       axios.post("/cashier/openAccount",{
         customerName: this.formItems1.customerName,
         idNumber: this.formItems1.idNumber,
         phoneNumber: this.formItems1.phoneNumber,
         openAmount: +this.formItems1.openAmount,
-        password: this.formItems1.password,
+        //password: this.formItems1.password,
+        password: this.hashString(this.formItems1.password,),
         address: this.formItems1.address
       })
           .then(response=>{
@@ -167,6 +188,12 @@ export default {
             ElMessage.error("failed");
           })
     },
+    hashString(str){
+      return sha256(str)
+    },
+    DeleteToken(){
+      sessionStorage.clear()
+    }
   }
 };
 
