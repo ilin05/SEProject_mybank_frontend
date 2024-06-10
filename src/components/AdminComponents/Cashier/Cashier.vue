@@ -259,8 +259,9 @@ export default {
     },
 
     ConfirmDeleteCashier() {
-      axios.delete("/admin/cashier", {
-        cashierId : this.deleteCashierInfo.cashierId,
+      axios.delete("/admin/cashier", {params:{
+          cashierId : this.deleteCashierInfo.cashierId,
+        }
       })
           .then(response => {
             console.log(response.data)

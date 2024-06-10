@@ -171,8 +171,8 @@ export default {
         idNumber: this.formItems1.idNumber,
         phoneNumber: this.formItems1.phoneNumber,
         openAmount: +this.formItems1.openAmount,
-        //password: this.formItems1.password,
-        password: this.hashString(this.formItems1.password,),
+        password: this.formItems1.password,
+        //password: this.hashString(this.formItems1.password,),
         address: this.formItems1.address
       })
           .then(response=>{
