@@ -260,7 +260,7 @@ export default {
 
     ConfirmDeleteCashier() {
       axios.delete("/admin/cashier", {params:{
-          cashierId : this.deleteCashierInfo.cashierId,
+          cashierId : this.deleteCashierInfo.cashierId
         }
       })
           .then(response => {
