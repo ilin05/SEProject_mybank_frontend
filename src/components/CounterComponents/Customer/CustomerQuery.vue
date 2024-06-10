@@ -65,12 +65,12 @@
 
 
           </el-form>
-          <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
+          <ul  class="infinite-list" style="overflow: auto">
             <li v-for="(item, index) in accountIds" :key="index" class="infinite-list-item">{{item}}</li>
           </ul>
         </el-card>
         <el-dialog v-model="modifyCustomerInfoVisible"  title="修改客户信息" align-center>
-          <el-form     :label-position="left"
+          <el-form     label-position="left"
                        label-width="auto">
             <el-form-item label="身份证号">
               <el-input v-model="toModifyCustomerInfo.idNumber" disabled></el-input>

@@ -49,12 +49,12 @@ const router = createRouter({
       component:AccountVue
     },
 
+    // {
+    //   path: '/customer',
+    //   redirect: '/customer/customerquery'
+    // },
     {
-      path: '/customer',
-      redirect: '/customer/customerquery'
-    },
-    {
-      path:'/customer/customerquery',
+      path:'/customer',
       component:CustomerQuery
     },
     {
