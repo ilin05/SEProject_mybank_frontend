@@ -15,8 +15,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
-//axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.baseURL = 'http://10.194.59.163:8000';
+axios.defaults.baseURL = 'http://localhost:8000';
+//axios.defaults.baseURL = 'http://10.194.32.164:8000';
 
 axios.interceptors.request.use( config =>{
     const token = sessionStorage.getItem('token')
