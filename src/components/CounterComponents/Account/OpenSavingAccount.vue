@@ -172,8 +172,10 @@ export default {
         phoneNumber: this.formItems1.phoneNumber,
         openAmount: +this.formItems1.openAmount,
         password: this.formItems1.password,
+
         // password: this.hashString(this.formItems1.password,),
         address: this.formItems1.address,
+
       })
           .then(response=>{
             if(response.data.code === 1){
