@@ -4,8 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
@@ -122,17 +121,16 @@
                     <el-input v-model="formItems1.address" placeholder="请输入地址"/>
                   </el-form-item>
                   <el-form-item label="账户密码">
-                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
+                    <el-input type="password" :prefix-icon="Lock" v-model="formItems1.password" placeholder="请输入密码"/>
+                  </el-form-item>
+                  <el-form-item label="账户形式">
+                    <el-select v-model="formItems1.accountForm" placeholder = "请选择账户形式">
+                      <el-option label="存折" value="存折"></el-option>
+                      <el-option label="银行卡" value="银行卡"></el-option>
+                    </el-select>
                   </el-form-item>
                   <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>
                 </el-form>
-<!--                <div class="form-label">开户人姓名</div>-->
-<!--                <el-input class="form-input" clearable />-->
-<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
-<!--                  <div class="form-label">{{ item.label }}</div>-->
-<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
-<!--                </div>-->
-<!--                <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>-->
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -159,6 +157,7 @@ export default {
         openAmount: '',
         address: '',
         password: '',
+        accountForm : '',
       }
     };
   },

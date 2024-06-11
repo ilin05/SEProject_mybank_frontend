@@ -4,8 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
@@ -18,7 +17,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              解冻业务办理
+              储蓄账户信息查询
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -33,7 +32,7 @@
             </RouterLink>
             <span class="history-trail"> > </span>
             <RouterLink to="/account/savingaccount/queryaccount">
-              <span class="history-trail">解冻</span>
+              <span class="history-trail">查询账户信息</span>
             </RouterLink>
           </div>
         </el-main>
@@ -94,9 +93,9 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <el-card title="解冻" class="deposit_card">
+          <el-card title="查询" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="储蓄卡解冻" name="tab1">
+              <el-tab-pane label="查询储蓄账户信息" name="tab1">
                 <el-form
                     :label-position="left"
                     label-width="auto"
