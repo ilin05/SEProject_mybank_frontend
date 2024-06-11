@@ -16,15 +16,14 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 //axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.baseURL = 'http://10.194.59.163:8000';
+axios.defaults.baseURL = 'http://10.195.240.127:8000';
 
 axios.interceptors.request.use( config =>{
     const token = sessionStorage.getItem('token')
     if(token) config.headers.Authorization = token
     if(config.data && config.data.password) {
         const hashPassword = SHA256(config.data.password).toString();
-        //const hashPassword = sha256(config.data.password);
-        config.data.password = hashPassword
+        config.data.password = hashPassword;
     }
     return config
 }, error => {
