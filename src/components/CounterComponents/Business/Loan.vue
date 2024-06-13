@@ -70,14 +70,14 @@
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="贷款申请" name="tab1">
                 <el-form label-width="80px" style="max-width: 600px" class="user-form">
-                  <el-form-item label="储蓄账号" required>
+                  <el-form-item label="储蓄账号" >
                     <el-input v-model="LoanData.accountId" placeholder="请填写贷款储蓄账号">
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="贷款金额" required>
+                  <el-form-item label="贷款金额" >
                     <el-input v-model.number="LoanData.loanAmount" placeholder="输入贷款金额"></el-input>
                   </el-form-item>
-                  <el-form-item label="贷款期限" required>
+                  <el-form-item label="贷款期限" >
                     <el-select v-model.number="LoanData.loanDuration" placeholder="输入贷款期限">
                       <el-option label="一个月" value="一个月"></el-option>
                       <el-option label="三个月" value="三个月"></el-option>
@@ -87,7 +87,7 @@
                       <el-option label="五年" value="五年"></el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="贷款用途" required>
+                  <el-form-item label="贷款用途" >
                     <el-select v-model="LoanData.loanType" placeholder="请选择贷款用途">
                       <el-option label="购房贷款" value="购房贷款"></el-option>
                       <el-option label="购车贷款" value="购车贷款"></el-option>
@@ -116,7 +116,7 @@
         </div>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
           贷款期限：
-          {{ this.durationTransform(LoanData.loanDuration) }}
+          {{ this.durationTransform(LoanData.loanDuration) }}月
         </div>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
           贷款类别：

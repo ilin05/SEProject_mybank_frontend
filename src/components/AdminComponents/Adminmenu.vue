@@ -5,7 +5,7 @@
         <el-header class="title" style="display: flex; justify-content: space-between;">
           <div style="margin-top: 12px; display: inline-block;">
             <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行管理员系统</span>
-            <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员：XXX</span>
+            <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员您好！</span>
           </div >
           <RouterLink to="/login">
             <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
@@ -24,12 +24,12 @@
                 color: black; font-weight: bold;">出纳员管理</span>
                 </el-button>
               </RouterLink>
-              <RouterLink to="/loanadmin">
-                <el-button class="functionBox">
-                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
-                color: black; font-weight: bold;">贷款审查员管理</span>
-                </el-button>
-              </RouterLink>
+<!--              <RouterLink to="/loanadmin">-->
+<!--                <el-button class="functionBox">-->
+<!--                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';-->
+<!--                color: black; font-weight: bold;">贷款审查员管理</span>-->
+<!--                </el-button>-->
+<!--              </RouterLink>-->
 
             </div>
             <RouterView class="main" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />
