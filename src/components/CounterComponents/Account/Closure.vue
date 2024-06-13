@@ -17,7 +17,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              开户业务办理
+              销户业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -106,7 +106,7 @@
                     <el-input v-model="formItems1.accountId" placeholder="请输入身份证号"/>
                   </el-form-item>
                   <el-form-item label="账户密码">
-                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
+                    <el-input type="password" v-model="formItems1.password" placeholder="请输入密码"/>
                   </el-form-item>
                   <el-form-item label="身份证号">
                     <el-input v-model="formItems1.idNumber" placeholder="请输入身份证号"/>

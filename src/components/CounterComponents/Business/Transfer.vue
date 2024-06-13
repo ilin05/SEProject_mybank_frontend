@@ -90,6 +90,22 @@
               </el-tab-pane>
             </el-tabs>
           </el-card>
+
+          <el-dialog v-model="ShowTransaction" title="定期存款信息" width="40%" align-center>
+            <el-form
+                label-width="auto"
+                style="max-width: 1000px"
+            >
+              <el-form-item label = "账单流水号">{{transferInfo.transactionId}}</el-form-item>
+              <el-form-item label = "转出方银行卡号">{{transferInfo.cardId}}</el-form-item>
+              <el-form-item label = "转入方银行卡号">{{transferInfo.moneyGoes}}</el-form-item>
+              <el-form-item label = "转账金额">{{transferInfo.transactionAmount}}</el-form-item>
+              <el-form-item label = "转账时间">{{transferInfo.transactionTime}}</el-form-item>
+              <span>
+                  <el-button @click="this.ShowTransaction=false">确定</el-button>
+                </span>
+            </el-form>
+          </el-dialog>
         </el-main>
       </el-container>
     </el-container>
@@ -113,12 +129,15 @@ export default {
   },
   data() {
     return {
+      ShowTransaction: false,
       activeTab: 'tab1',
       transferInfo:{
         cardId:'',
         password:'',
         transactionAmount:0.0,
-        moneyGoes:''
+        moneyGoes:'',
+        transactionTime: '',
+        transactionId: '',
       }
 
     };
@@ -132,8 +151,12 @@ export default {
             transactionAmount:this.transferInfo.transactionAmount,
             moneyGoes:this.transferInfo.moneyGoes
           }).then(response=>{
-        if(response.data.code)
+        if(response.data.code){
           ElMessage.success("转账成功")
+          this.transferInfo.transactionId = response.data.payload.transactionId
+          this.transferInfo.transactionTime = response.data.payload.transactionTime
+          this.ShowTransaction = true
+        }
         else ElMessage.error(response.data.message)// 显示消息提醒
       })
     }

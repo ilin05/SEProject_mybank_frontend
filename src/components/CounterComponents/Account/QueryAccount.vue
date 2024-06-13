@@ -17,7 +17,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              储蓄账户信息查询
+              查询账户信息
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -95,7 +95,8 @@
         <el-main>
           <el-card title="查询" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="查询储蓄账户信息" name="tab1">
+
+              <el-tab-pane label="账户信息查询" name="tab1">
                 <el-form
                     :label-position="left"
                     label-width="auto"

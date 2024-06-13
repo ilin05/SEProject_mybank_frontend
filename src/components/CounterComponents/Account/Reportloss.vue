@@ -106,7 +106,7 @@
                     <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
                   </el-form-item>
                   <el-form-item label="密码">
-                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
+                    <el-input type="password" v-model="formItems1.password" placeholder="请输入密码"/>
                   </el-form-item>
 
                 <el-button type="primary" @click="ConfirmReportLoss">确认</el-button>

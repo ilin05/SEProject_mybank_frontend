@@ -173,6 +173,39 @@
                 </span>
             </template>
           </el-dialog>
+
+          <el-dialog v-model="ShowWithdrawDemandDeposit" title="活期存款信息" width="40%" align-center>
+            <el-form
+                label-width="auto"
+                style="max-width: 600px"
+            >
+              <el-form-item label = "取款账单流水号">{{toWithDrawDemandDepositInfo.transactionId}}</el-form-item>
+              <el-form-item label = "银行卡号">{{toWithDrawDemandDepositInfo.accountId}}</el-form-item>
+              <el-form-item label = "取款金额">{{toWithDrawDemandDepositInfo.amount}}</el-form-item>
+              <el-form-item label = "取款时间">{{toWithDrawDemandDepositInfo.transactionTime}}</el-form-item>
+              <span>
+                  <el-button @click="this.ShowWithdrawDemandDeposit=false">确定</el-button>
+                </span>
+            </el-form>
+          </el-dialog>
+
+          <el-dialog v-model="ShowWithdrawFixedDeposit" title="定期存款信息" width="60%" align-center>
+            <el-form
+                label-width="auto"
+                style="max-width: 1000px"
+            >
+              <el-form-item label = "取款账单流水号">{{toWithdrawFixedDepositInfo.transactionId0}}</el-form-item>
+              <el-form-item label = "剩余金额转入活期存款流水号">{{toWithdrawFixedDepositInfo.transactionId}}</el-form-item>
+              <el-form-item label = "银行卡号">{{toWithdrawFixedDepositInfo.accountId}}</el-form-item>
+              <el-form-item label = "取款金额">{{toWithdrawFixedDepositInfo.amount}}</el-form-item>
+              <el-form-item label = "转入活期存款金额">{{toWithdrawFixedDepositInfo.transferAmount}}</el-form-item>
+              <el-form-item label = "取款时就">{{toWithdrawFixedDepositInfo.transactionTime}}</el-form-item>
+              <span>
+                  <el-button @click="this.ShowWithdrawFixedDeposit=false">确定</el-button>
+                </span>
+            </el-form>
+          </el-dialog>
+
         </el-main>
       </el-container>
     </el-container>
@@ -205,6 +238,8 @@ export default {
   },
   data() {
     return {
+      ShowWithdrawDemandDeposit: false,
+      ShowWithdrawFixedDeposit: false,
       activeTab: 'tab1',
       accountIdToWithdrawFixedDeposit:'',
       accountIdToWithdrawDemandDeposit:'',
@@ -212,12 +247,18 @@ export default {
         accountId: '',
         password: '',
         fixedDepositId: 0,
-        amount: 0.0
+        amount: 0.0,
+        transactionId: '',
+        transactionId0:'',
+        transactionTime: '',
+        transferAmount: ''
       },
       toWithDrawDemandDepositInfo:{
         accountId: '',
         password: '',
-        amount: 0.0
+        amount: 0.0,
+        transactionId: '',
+        transactionTime: ''
       },
       withdrawFixedDepositVisible:false,
       withdrawDemandDepositVisible:false,
@@ -271,8 +312,14 @@ export default {
             fixedDepositId:this.toWithdrawFixedDepositInfo.fixedDepositId,
             amount: +this.toWithdrawFixedDepositInfo.amount
           }).then(response=>{
-        if(response.data.code)
+        if(response.data.code){
           ElMessage.success("取款成功")
+          this.toWithdrawFixedDepositInfo.transactionId = response.data.payload.transactionId
+          this.toWithdrawFixedDepositInfo.transactionId0 = response.data.payload.transactionId-1
+          this.toWithdrawFixedDepositInfo.transactionTime = response.data.payload.transactionTime
+          this.toWithdrawFixedDepositInfo.transferAmount = response.data.payload.transactionAmount
+          this.ShowWithdrawFixedDeposit = true
+        }
         else ElMessage.error(response.data.message)// 显示消息提醒
         this.withdrawFixedDepositVisible = false // 将对话框设置为不可见
         this.queryFixedDeposit() // 重新查询借书证以刷新页面
@@ -285,8 +332,12 @@ export default {
             password: this.toWithDrawDemandDepositInfo.password,
             amount: +this.toWithDrawDemandDepositInfo.amount
           }).then(response=>{
-        if(response.data.code)
+        if(response.data.code){
           ElMessage.success("取款成功")
+          this.toWithDrawDemandDepositInfo.transactionTime = response.data.payload.transactionTime
+          this.toWithDrawDemandDepositInfo.transactionId = response.data.payload.transactionId
+          this.ShowWithdrawDemandDeposit = true
+        }
         else ElMessage.error(response.data.message)// 显示消息提醒
         this.withdrawDemandDepositVisible = false // 将对话框设置为不可见
         this.queryDemandDeposit() // 重新查询借书证以刷新页面
