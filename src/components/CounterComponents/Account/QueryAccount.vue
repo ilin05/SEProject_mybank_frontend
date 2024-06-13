@@ -4,8 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
@@ -94,8 +93,9 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <el-card title="解冻" class="deposit_card">
+          <el-card title="查询" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
+
               <el-tab-pane label="账户信息查询" name="tab1">
                 <el-form
                     :label-position="left"
@@ -103,8 +103,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                   <el-button type="primary" @click="ConfirmQuery">查询</el-button>
                 </el-form>
@@ -113,7 +113,7 @@
           </el-card>
           <el-card title="账户信息查询" class="deposit_card">
             <el-table :data="queryResult">
-              <el-table-column prop="accountId" label="银行卡号">
+              <el-table-column prop="accountId" label="银行账号">
               </el-table-column>
               <el-table-column prop="customerId" label="用户ID">
               </el-table-column>

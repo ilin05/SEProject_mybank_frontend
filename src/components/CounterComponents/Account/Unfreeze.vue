@@ -4,8 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
@@ -103,24 +102,14 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                     <el-button type="primary" @click="ConfirmGetFreeze">查询</el-button>
                 </el-form>
-<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
-<!--                  <div class="form-label">{{ item.label }}</div>-->
-<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
-<!--                </div>-->
-<!--                <el-button type="primary" >查询</el-button>-->
+
               </el-tab-pane>
-              <el-tab-pane label="信用卡解冻" name="tab2">
-                <div v-for="(item, index) in formItems2" :key="index" class="form-row">
-                  <div class="form-label">{{ item.label }}</div>
-                  <el-input class="form-input" :placeholder="item.placeholder" clearable />
-                </div>
-                <el-button type="primary" >查询</el-button>
-              </el-tab-pane>
+
             </el-tabs>
           </el-card>
           <el-card title="解冻查询" class="deposit_card">
@@ -166,6 +155,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import {ElMessage} from "element-plus";
+import SHA256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -221,7 +211,7 @@ export default {
       //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
       axios.post("/cashier/unfreeze", {
         accountId: this.formItems1.accountId,
-        password: this.formItems1.password,
+        password: SHA256(this.formItems1.password).toString(),
         unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
       })
           .then(response => {

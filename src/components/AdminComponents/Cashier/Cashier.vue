@@ -4,7 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行管理员系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
@@ -259,15 +259,17 @@ export default {
     },
 
     ConfirmDeleteCashier() {
-      axios.delete("/admin/cashier", {params:{
-          cashierId : this.deleteCashierInfo.cashierId
+
+      axios.delete("/admin/cashier", { params:{
+          cashierId : this.deleteCashierInfo.cashierId,
+
         }
       })
           .then(response => {
             console.log(response.data)
             if (response.data.code === 1) {
               ElMessage.success(response.data);
-              this.modifyCashierVisible = false;
+              this.deleteCashierVisible = false;
               this.QueryCashier();
             } else {
               ElMessage.error("修改失败");
