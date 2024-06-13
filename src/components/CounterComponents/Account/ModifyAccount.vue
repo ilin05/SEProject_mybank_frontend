@@ -105,24 +105,44 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入身份证号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入储蓄帐号"/>
                   </el-form-item>
-                  <el-form-item label="原本密码">
-                    <el-input type="password" v-model="formItems1.oldPassword" placeholder="请输入原本的密码"/>
-                  </el-form-item>
-                  <el-form-item label="新密码">
-                    <el-input type="password" v-model="formItems1.newPassword1" placeholder="请输入新密码"/>
-                  </el-form-item>
-                  <el-form-item label="新密码">
-                    <el-input type="password" v-model="formItems1.newPassword2" placeholder="请再次输入新密码"/>
-                  </el-form-item>
+<!--                  <el-form-item label="旧密码">-->
+<!--                    <el-input type="password" v-model="formItems1.oldPassword" placeholder="请输入原本的密码"/>-->
+<!--                  </el-form-item>-->
+<!--                  <el-form-item label="新密码">-->
+<!--                    <el-input type="password" v-model="formItems1.newPassword1" placeholder="请输入新密码"/>-->
+<!--                  </el-form-item>-->
+<!--                  <el-form-item label="确认新密码">-->
+<!--                    <el-input type="password" v-model="formItems1.newPassword2" placeholder="请再次输入新密码"/>-->
+<!--                  </el-form-item>-->
 
-                  <el-button type="primary" @click="ConfirmModifyAccount">确认</el-button>
+                  <el-button type="primary" @click="InputPasswordVisible=true" :disabled="formItems1.accountId===''">确认</el-button>
                 </el-form>
               </el-tab-pane>
             </el-tabs>
+
+            <el-dialog v-model="InputPasswordVisible" title="账户密码修改" width="40%" align-center>
+              <el-form
+                  label-width="auto"
+                  style="max-width: 600px">
+                <el-form-item label="旧密码">
+                  <el-input type="password" :prefix-icon="Lock" v-model="formItems1.oldPassword" placeholder="请输入旧密码"/>
+                </el-form-item>
+                <el-form-item label="新密码">
+                  <el-input type="password" :prefix-icon="Lock" v-model="formItems1.newPassword1" placeholder="请输入密码"/>
+                </el-form-item>
+                <el-form-item label="确认密码">
+                  <el-input type="password" :prefix-icon="Lock" v-model="formItems1.newPassword2" placeholder="再次输入密码"/>
+                </el-form-item>
+                <span>
+                  <el-button type="primary" @click="this.InputPasswordVisible=false; ConfirmModifyAccount()">确定</el-button>
+                </span>
+              </el-form>
+            </el-dialog>
           </el-card>
+
         </el-main>
       </el-container>
     </el-container>
@@ -132,12 +152,14 @@
 <script>
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import SHA256 from "crypto-js/sha256";
 
 
 export default {
   data() {
     return {
       activeTab: 'tab1',
+      InputPasswordVisible:false,
       formItems1: {
         accountId: '',
         oldPassword: '',
@@ -153,14 +175,19 @@ export default {
       }else{
         axios.post("/cashier/modifyPassword", {
           accountId: this.formItems1.accountId,
-          oldPassword: this.formItems1.oldPassword,
-          //oldPassword: sha256(this.formItems1.oldPassword),
-          newPassword: this.formItems1.newPassword1,
-          //newPassword: sha256(this.formItems1.newPassword),
+          // oldPassword: this.formItems1.oldPassword,
+          oldPassword: SHA256(this.formItems1.oldPassword).toString(),
+          // newPassword: this.formItems1.newPassword1,
+          newPassword: SHA256(this.formItems1.newPassword).toString(),
         })
             .then(response => {
+              console.log(response);
               if (response.data.code === 1) {
                 ElMessage.success("密码修改成功");
+                // this.$refs["formItems1"].resetFields();
+                this.formItems1.oldPassword='';
+                this.formItems1.newPassword1='';
+                this.formItems1.newPassword2='';
               } else {
                 ElMessage.error(response.data.message)
               }

@@ -103,8 +103,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                   <el-button type="primary" @click="ConfirmQuery">查询</el-button>
                 </el-form>
@@ -113,7 +113,7 @@
           </el-card>
           <el-card title="账户信息查询" class="deposit_card">
             <el-table :data="queryResult">
-              <el-table-column prop="accountId" label="银行卡号">
+              <el-table-column prop="accountId" label="银行账号">
               </el-table-column>
               <el-table-column prop="customerId" label="用户ID">
               </el-table-column>

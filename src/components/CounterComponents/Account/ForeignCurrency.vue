@@ -56,12 +56,12 @@
               </el-icon>
               <span>外汇账户</span>
             </el-menu-item>
-            <el-menu-item index="/account/internetbank">
-              <el-icon>
-                <UserFilled />
-              </el-icon>
-              <span>网银账户</span>
-            </el-menu-item>
+<!--            <el-menu-item index="/account/internetbank">-->
+<!--              <el-icon>-->
+<!--                <UserFilled />-->
+<!--              </el-icon>-->
+<!--              <span>网银账户</span>-->
+<!--            </el-menu-item>-->
 
           </el-menu>
         </el-aside>
@@ -79,10 +79,10 @@
                     <el-input v-model="foreignCurrencyInfo.name" placeholder="请输入姓名"/>
                   </el-form-item>
                   <el-form-item label="登录密码">
-                    <el-input v-model="foreignCurrencyInfo.password" placeholder="请输入登录密码"/>
+                    <el-input type="password" v-model="foreignCurrencyInfo.password" placeholder="请输入登录密码"/>
                   </el-form-item>
                   <el-form-item label="支付密码">
-                    <el-input v-model="foreignCurrencyInfo.pay_password" placeholder="请输入支付密码"/>
+                    <el-input type="password" v-model="foreignCurrencyInfo.pay_password" placeholder="请输入支付密码"/>
                   </el-form-item>
 
                   <el-button type="primary" @click="ConfirmOpenForeignAccount">确认</el-button>

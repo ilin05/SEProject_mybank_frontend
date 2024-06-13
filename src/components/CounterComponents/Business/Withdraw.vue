@@ -70,14 +70,14 @@
             <el-tabs v-model="activeTab" type="border-card">
               <el-tab-pane label="定期取款" name="tab1">
                 <div class="form-row">
-                  <div class="form-label">银行卡号:</div>
+                  <div class="form-label">银行账号:</div>
                   <el-input class="form-input" :placeholder="银行账户ID" clearable v-model="accountIdToWithdrawFixedDeposit" />
                 </div>
                 <el-button type="primary" @click="queryFixedDeposit">定期查询</el-button>
               </el-tab-pane>
               <el-tab-pane label="活期取款" name="tab2">
                 <div class="form-row">
-                  <div class="form-label">银行卡号：</div>
+                  <div class="form-label">银行账号：</div>
                   <el-input class="form-input" :placeholder="银行账户ID" clearable v-model="accountIdToWithdrawDemandDeposit" />
                 </div>
                 <el-button type="primary" @click="queryDemandDeposit">活期查询</el-button>
@@ -220,6 +220,7 @@ import {ElMessage} from "element-plus";
 import axios from "axios";
 import {CreditCard, Edit, Lock} from "@element-plus/icons-vue";
 import {el} from "element-plus/es/locale/index";
+import SHA256 from "crypto-js/sha256";
 
 export default {
   computed: {
@@ -308,7 +309,7 @@ export default {
       axios.post("/cashier/withdrawFixed",
           {
             accountId: this.toWithdrawFixedDepositInfo.accountId,
-            password: this.toWithdrawFixedDepositInfo.password,
+            password: SHA256(this.toWithdrawFixedDepositInfo.password).toString(),
             fixedDepositId:this.toWithdrawFixedDepositInfo.fixedDepositId,
             amount: +this.toWithdrawFixedDepositInfo.amount
           }).then(response=>{
@@ -322,6 +323,7 @@ export default {
         }
         else ElMessage.error(response.data.message)// 显示消息提醒
         this.withdrawFixedDepositVisible = false // 将对话框设置为不可见
+        this.toWithdrawFixedDepositInfo.password = '';
         this.queryFixedDeposit() // 重新查询借书证以刷新页面
       })
     },
@@ -329,7 +331,7 @@ export default {
       axios.post("/cashier/withdrawDemand",
           {
             accountId: this.toWithDrawDemandDepositInfo.accountId,
-            password: this.toWithDrawDemandDepositInfo.password,
+            password: SHA256(this.toWithDrawDemandDepositInfo.password).toString(),
             amount: +this.toWithDrawDemandDepositInfo.amount
           }).then(response=>{
         if(response.data.code){
@@ -340,6 +342,7 @@ export default {
         }
         else ElMessage.error(response.data.message)// 显示消息提醒
         this.withdrawDemandDepositVisible = false // 将对话框设置为不可见
+        this.toWithDrawDemandDepositInfo.password = '';
         this.queryDemandDeposit() // 重新查询借书证以刷新页面
       })
     }

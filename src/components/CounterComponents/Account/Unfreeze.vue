@@ -102,8 +102,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                     <el-button type="primary" @click="ConfirmGetFreeze">查询</el-button>
                 </el-form>
@@ -155,6 +155,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import {ElMessage} from "element-plus";
+import SHA256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -210,7 +211,7 @@ export default {
       //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
       axios.post("/cashier/unfreeze", {
         accountId: this.formItems1.accountId,
-        password: this.formItems1.password,
+        password: SHA256(this.formItems1.password).toString(),
         unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
       })
           .then(response => {

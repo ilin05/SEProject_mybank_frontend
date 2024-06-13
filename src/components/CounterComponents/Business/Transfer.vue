@@ -6,7 +6,7 @@
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
           <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
-        <RouterLink to="login">
+        <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
             <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
           </el-button>
@@ -70,41 +70,57 @@
         <el-main>
           <el-card title="转账" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="卡号转账" name="tab1">
+              <el-tab-pane label="账户转账" name="tab1">
                 <el-form     :label-position="left"
                              label-width="auto">
-                  <el-form-item label="转出卡号">
+                  <el-form-item label="转出账号">
                     <el-input  v-model="transferInfo.cardId"></el-input>
                   </el-form-item>
-                  <el-form-item label="转入卡号">
+                  <el-form-item label="转入账号">
                     <el-input v-model="transferInfo.moneyGoes"></el-input>
                   </el-form-item>
                   <el-form-item label="转账金额" >
                     <el-input v-model="transferInfo.transactionAmount" type="number"></el-input>
                   </el-form-item>
-                  <el-form-item label="输入密码">
-                    <el-input type="password" :prefix-icon="Lock" v-model="transferInfo.password"></el-input>
-                  </el-form-item>
-                  <el-button type="primary" @click="confirmTransfer" :disabled="this.transferInfo.transactionAmount<=0||this.transferInfo.cardId===''||this.transferInfo.password===''||this.transferInfo.moneyGoes===''">确认</el-button>
+<!--                  <el-form-item label="输入密码">-->
+<!--                    <el-input type="password" :prefix-icon="Lock" v-model="transferInfo.password"></el-input>-->
+<!--                  </el-form-item>-->
+                  <el-button type="primary" @click="InputPassordVisible = true" :disabled="this.transferInfo.transactionAmount<=0||this.transferInfo.cardId===''||this.transferInfo.moneyGoes===''">确认</el-button>
                 </el-form>
               </el-tab-pane>
             </el-tabs>
           </el-card>
 
-          <el-dialog v-model="ShowTransaction" title="定期存款信息" width="40%" align-center>
+          <el-dialog v-model="ShowTransaction" title="转账信息" width="40%" align-center>
             <el-form
                 label-width="auto"
                 style="max-width: 1000px"
             >
               <el-form-item label = "账单流水号">{{transferInfo.transactionId}}</el-form-item>
-              <el-form-item label = "转出方银行卡号">{{transferInfo.cardId}}</el-form-item>
-              <el-form-item label = "转入方银行卡号">{{transferInfo.moneyGoes}}</el-form-item>
+              <el-form-item label = "转出方银行账号">{{transferInfo.cardId}}</el-form-item>
+              <el-form-item label = "转入方银行账号">{{transferInfo.moneyGoes}}</el-form-item>
               <el-form-item label = "转账金额">{{transferInfo.transactionAmount}}</el-form-item>
               <el-form-item label = "转账时间">{{transferInfo.transactionTime}}</el-form-item>
               <span>
                   <el-button @click="this.ShowTransaction=false">确定</el-button>
                 </span>
             </el-form>
+          </el-dialog>
+
+          <el-dialog v-model="InputPassordVisible" title="输入密码验证" width="40%" align-center>
+            <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
+              密码：
+              <el-input type="password" :prefix-icon="Lock" v-model="transferInfo.password" style="width: 12.5vw;" clearable></el-input>
+              <!--                <el-input type="password" v-model="formItems1.password" style="width: 12.5vw;" clearable />-->
+            </div>
+            <template #footer>
+                <span>
+                  <el-button @click="this.InputPassordVisible=false">取消</el-button>
+                  <el-button type="primary" @click="confirmTransfer" :disabled="this.transferInfo.password===''">
+                    确定
+                  </el-button>
+                </span>
+            </template>
           </el-dialog>
         </el-main>
       </el-container>
@@ -117,6 +133,7 @@ import {Edit, Lock} from "@element-plus/icons-vue";
 import {el} from "element-plus/es/locale/index";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import SHA256 from "crypto-js/sha256";
 
 export default {
   computed: {
@@ -130,6 +147,7 @@ export default {
   data() {
     return {
       ShowTransaction: false,
+      InputPassordVisible :false,
       activeTab: 'tab1',
       transferInfo:{
         cardId:'',
@@ -147,7 +165,7 @@ export default {
       axios.post("/cashier/transfer",
           {
             cardId:this.transferInfo.cardId,
-            password:this.transferInfo.password,
+            password:SHA256(this.transferInfo.password).toString(),
             transactionAmount:this.transferInfo.transactionAmount,
             moneyGoes:this.transferInfo.moneyGoes
           }).then(response=>{
@@ -155,7 +173,9 @@ export default {
           ElMessage.success("转账成功")
           this.transferInfo.transactionId = response.data.payload.transactionId
           this.transferInfo.transactionTime = response.data.payload.transactionTime
-          this.ShowTransaction = true
+          this.ShowTransaction = true;
+          this.InputPassordVisible = false;
+          this.transferInfo.password='';
         }
         else ElMessage.error(response.data.message)// 显示消息提醒
       })

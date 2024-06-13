@@ -90,6 +90,7 @@ input {
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import router from "@/router/index.js";
+import SHA256 from "crypto-js/sha256";
 
 export default {
 
@@ -107,7 +108,7 @@ export default {
     ConfirmAdminLogin(){
       axios.post("/admin/login",{
         username:this.adminLoginInfo.username,
-        password:this.adminLoginInfo.password,
+        password:SHA256(this.adminLoginInfo.password).toString(),
       })
           .then(response=>{
             if(response.data.code === 1){

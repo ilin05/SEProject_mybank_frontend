@@ -104,8 +104,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                   <el-form-item label="冻结原因">
                     <el-input v-model="formItems1.reason" placeholder="请输入冻结原因"/>
@@ -164,7 +164,7 @@ export default {
         accountId: this.formItems1.accountId,
         reason: this.formItems1.reason,
         unfreezeTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss'),
-        password: this.formItems1.password
+        password: SHA256(this.formItems1.password).toString(),
       })
           .then(response => {
             if (response.data.code === 1) {

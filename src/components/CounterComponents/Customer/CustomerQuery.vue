@@ -54,7 +54,7 @@
               <el-input  v-model="customerInfo.creditLine" disabled></el-input>
             </el-form-item>
             <el-form-item label="网银开户状态" >
-              <el-text>{{this.customerInfo.internetBankOpen?"一开":"未开"}}</el-text>
+              <el-text>{{this.customerInfo.internetBankOpen?"已开":"未开"}}</el-text>
             </el-form-item>
             <el-form-item label="名下储蓄账户卡号" >
               <el-button type="primary" @click="queryCustomerinfo" style="margin-left: auto">查询</el-button>
@@ -83,6 +83,15 @@
             <el-form-item label="地址">
               <el-input v-model="toModifyCustomerInfo.address"></el-input>
             </el-form-item>
+            <el-form v-if="this.customerInfo.internetBankOpen===false"
+                     label-position="left"
+                     label-width="auto">
+              <el-form-item label="网银开户" >
+                <el-select v-model="this.internetBankOpenTemp">
+                  <el-option label="开启" value="true"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
           </el-form>
           <template #footer>
                 <span class="dialog-footer">
@@ -106,6 +115,7 @@ export default {
       activeTab: 'tab1',
       modifyDisabled:true,
       idNumberToQuery:'',
+      internetBankOpenTemp:true,
       customerInfo:{
         customerName:'',
         phoneNumber:'',
@@ -160,6 +170,7 @@ export default {
             customerName:this.toModifyCustomerInfo.customerName,
             phoneNumber:this.toModifyCustomerInfo.phoneNumber,
             address:this.toModifyCustomerInfo.address,
+            internetBankOpen:this.internetBankOpenTemp,
           }).then(response=>{
         if(response.data.code)
           ElMessage.success("修改成功")

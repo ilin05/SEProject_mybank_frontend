@@ -102,8 +102,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                   <el-form-item label="密码">
                     <el-input type="password" v-model="formItems1.password" placeholder="请输入密码"/>
@@ -124,6 +124,7 @@
 <script>
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import SHA256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -148,7 +149,7 @@ export default {
       console.log("hello3")
       axios.post("/cashier/reportLoss",{
         accountId:this.formItems1.accountId,
-        password: this.formItems1.password
+        password: SHA256(this.formItems1.password).toString(),
       })
           .then(response=>{
             if(response.data.code === 1){

@@ -102,8 +102,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入银行卡号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入银行账号"/>
                   </el-form-item>
                   <el-button type="primary" @click="InputPassordVisible = true">补发</el-button>
                 </el-form>
@@ -148,6 +148,7 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import dayjs from "dayjs";
+import SHA256 from "crypto-js/sha256";
 
 export default {
   data() {
@@ -202,7 +203,7 @@ export default {
       //console.log(dayjs(result).format('YYYY-MM-DD HH:mm:ss'))
       axios.post("/cashier/reissue", {
         accountId: this.formItems1.accountId,
-        password: this.formItems1.password,
+        password: SHA256(this.formItems1.password).toString(),
         reissueTime: dayjs(result).format('YYYY-MM-DD HH:mm:ss')
       })
           .then(response => {
@@ -210,6 +211,7 @@ export default {
               ElMessage.success("补发成功");
               console.log(response.data);
               //location.href = '/menu'
+              this.InputPassordVisible = false;
             } else {
               ElMessage.error(response.data.message)
               console.log(response.data);

@@ -8,9 +8,11 @@
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
           <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
-        <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
-          <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
-        </el-button>
+        <RouterLink to="/login">
+          <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
+            <span style="font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: normal;">登出</span>
+          </el-button>
+        </RouterLink>
       </el-header>
 
       <el-container>
@@ -52,12 +54,12 @@
                       </el-icon>
                       <span>外汇账户</span>
                     </el-menu-item>
-                    <el-menu-item index="account/internetbank">
-                      <el-icon>
-                        <UserFilled />
-                      </el-icon>
-                      <span>网银账户</span>
-                    </el-menu-item>
+<!--                    <el-menu-item index="account/internetbank">-->
+<!--                      <el-icon>-->
+<!--                        <UserFilled />-->
+<!--                      </el-icon>-->
+<!--                      <span>网银账户</span>-->
+<!--                    </el-menu-item>-->
 
                   </el-menu>
                 </el-aside>
