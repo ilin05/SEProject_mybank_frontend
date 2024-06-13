@@ -4,8 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
@@ -121,18 +120,18 @@
                   <el-form-item label="地址">
                     <el-input v-model="formItems1.address" placeholder="请输入地址"/>
                   </el-form-item>
-                  <el-form-item label="账户密码">
-                    <el-input type="password" v-model="formItems1.password" placeholder="请输入密码"/>
+<!--                  <el-form-item label="账户密码">-->
+<!--                    <el-input type="password" :prefix-icon="Lock" v-model="formItems1.password" placeholder="请输入密码"/>-->
+<!--                  </el-form-item>-->
+                  <el-form-item label="账户形式">
+                    <el-select v-model="formItems1.accountForm" placeholder = "请选择账户形式">
+                      <el-option label="存折" value="存折"></el-option>
+                      <el-option label="银行卡" value="银行卡"></el-option>
+                    </el-select>
+
                   </el-form-item>
-                  <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>
+                  <el-button type="primary" @click="InputPasswordVisible=true">确认</el-button>
                 </el-form>
-<!--                <div class="form-label">开户人姓名</div>-->
-<!--                <el-input class="form-input" clearable />-->
-<!--                <div v-for="(item, index) in formItems1" :key="index" class="form-row">-->
-<!--                  <div class="form-label">{{ item.label }}</div>-->
-<!--                  <el-input class="form-input" :placeholder="item.placeholder" clearable />-->
-<!--                </div>-->
-<!--                <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>-->
               </el-tab-pane>
             </el-tabs>
 
@@ -152,6 +151,22 @@
                 </span>
               </el-form>
             </el-dialog>
+
+            <el-dialog v-model="InputPasswordVisible" title="请设置账户密码" width="40%" align-center>
+              <el-form
+                  label-width="auto"
+                  style="max-width: 600px">
+                <el-form-item label="请输入密码">
+                  <el-input type="password" :prefix-icon="Lock" v-model="formItems1.password" placeholder="请输入密码"/>
+                </el-form-item>
+                <el-form-item label="确认密码">
+                  <el-input type="password" :prefix-icon="Lock" v-model="this.passwordTemp" placeholder="再次输入密码"/>
+                </el-form-item>
+                <span>
+                  <el-button type="primary" @click="this.InputPasswordVisible=false; ConfirmOpenAccount()">确定</el-button>
+                </span>
+              </el-form>
+            </el-dialog>
           </el-card>
         </el-main>
       </el-container>
@@ -163,6 +178,7 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import {sha256} from "js-sha256";
+import SHA256 from "crypto-js/sha256";
 
 
 export default {
@@ -170,6 +186,8 @@ export default {
     return {
       activeTab: 'tab1',
       ShowOpenAccount: false,
+      InputPasswordVisible:false,
+      passwordTemp:'',
       formItems1:{
         customerName: '',
         idNumber: '',
@@ -177,37 +195,47 @@ export default {
         openAmount: '',
         address: '',
         password: '',
-        accountId: ''
+        accountForm : '',
+        accountId: '',
+
       }
     };
   },
   methods:{
     ConfirmOpenAccount(){
-      console.log("hello2")
-      console.log(this.hashString(this.formItems1.password,))
-      axios.post("/cashier/openAccount",{
-        customerName: this.formItems1.customerName,
-        idNumber: this.formItems1.idNumber,
-        phoneNumber: this.formItems1.phoneNumber,
-        openAmount: +this.formItems1.openAmount,
-        password: this.formItems1.password,
-        //password: this.hashString(this.formItems1.password,),
-        address: this.formItems1.address
-      })
-          .then(response=>{
-            if(response.data.code === 1){
-              ElMessage.success("开户成功");
-              this.formItems1.accountId = response.data.payload;
-              this.ShowOpenAccount = true
-              console.log(response.data);
-              //location.href = '/menu'
-            } else{
-              ElMessage.error(response.data.message)
-            }
-          })
-          .catch(error =>{
-            ElMessage.error("failed");
-          })
+      if(this.passwordTemp===this.formItems1.password){
+        console.log("hello2")
+        console.log(this.hashString(this.formItems1.password,))
+        axios.post("/cashier/openAccount",{
+          customerName: this.formItems1.customerName,
+          idNumber: this.formItems1.idNumber,
+          phoneNumber: this.formItems1.phoneNumber,
+          openAmount: +this.formItems1.openAmount,
+          password: SHA256(this.formItems1.password).toString(),
+
+          // password: this.hashString(this.formItems1.password,),
+          address: this.formItems1.address,
+
+        })
+            .then(response=>{
+              if(response.data.code === 1){
+                ElMessage.success("开户成功");
+                this.formItems1.accountId = response.data.payload;
+                this.ShowOpenAccount = true
+                console.log(response.data);
+                //location.href = '/menu'
+                this.formItems1.password='';
+                this.passwordTemp='';
+              } else{
+                ElMessage.error(response.data.message)
+              }
+            })
+            .catch(error =>{
+              ElMessage.error("failed");
+            })
+      }else{
+        ElMessage.error("密码不一致");
+      }
     },
     hashString(str){
       return sha256(str)

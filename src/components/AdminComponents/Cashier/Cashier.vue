@@ -259,15 +259,17 @@ export default {
     },
 
     ConfirmDeleteCashier() {
-      axios.delete("/admin/cashier", {params:{
-          cashierId : this.deleteCashierInfo.cashierId
+
+      axios.delete("/admin/cashier", { params:{
+          cashierId : this.deleteCashierInfo.cashierId,
+
         }
       })
           .then(response => {
             console.log(response.data)
             if (response.data.code === 1) {
               ElMessage.success(response.data);
-              this.modifyCashierVisible = false;
+              this.deleteCashierVisible = false;
               this.QueryCashier();
             } else {
               ElMessage.error("修改失败");

@@ -131,7 +131,7 @@ export default {
       console.log(SHA256(this.adminLoginInfo.password).toString())
       axios.post("/admin/login",{
         username:this.adminLoginInfo.username,
-        password:this.adminLoginInfo.password,
+        password:SHA256(this.adminLoginInfo.password).toString(),
       })
           .then(response=>{
             if(response.data.code === 1){
@@ -150,7 +150,7 @@ export default {
     ConfirmCashierLogin(){
       axios.post("/cashier/login",{
         cashierId:+this.cashierLoginInfo.cashierId,
-        password:this.cashierLoginInfo.password,
+        password:SHA256(this.cashierLoginInfo.password).toString(),
       })
           .then(response=>{
             console.log(response.data)

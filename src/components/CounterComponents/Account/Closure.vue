@@ -4,8 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行柜台操作系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员：XXX</span>
-          <span style="margin-left :15px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">今日办结事项：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">出纳员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;" @click="DeleteToken">
@@ -103,8 +102,8 @@
                     :model="formItems1"
                     style="max-width: 600px"
                 >
-                  <el-form-item label="银行卡号">
-                    <el-input v-model="formItems1.accountId" placeholder="请输入身份证号"/>
+                  <el-form-item label="银行账号">
+                    <el-input v-model="formItems1.accountId" placeholder="请输入储蓄帐号"/>
                   </el-form-item>
                   <el-form-item label="账户密码">
                     <el-input type="password" v-model="formItems1.password" placeholder="请输入密码"/>
@@ -127,6 +126,7 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import {sha256} from "js-sha256";
+import SHA256 from "crypto-js/sha256";
 
 
 export default {
@@ -144,7 +144,7 @@ export default {
     ConfirmClosure() {
       axios.post("/cashier/closeAccount", {
         accountId: this.formItems1.accountId,
-        password: this.formItems1.password,
+        password: SHA256(this.formItems1.password).toString(),
         //password: sha256(this.formItems1.password),
         idNumber: this.formItems1.idNumber
       })
