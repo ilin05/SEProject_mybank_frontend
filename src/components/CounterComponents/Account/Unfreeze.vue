@@ -144,7 +144,7 @@
             <el-dialog v-model="InputPassordVisible" title="输入密码验证" width="40%" align-center>
               <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 密码：
-                <el-input v-model="formItems1.password" style="width: 12.5vw;" clearable />
+                <el-input type="password" v-model="formItems1.password" style="width: 12.5vw;" clearable />
               </div>
               <template #footer>
                 <span>

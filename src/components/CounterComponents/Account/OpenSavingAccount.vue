@@ -122,7 +122,7 @@
                     <el-input v-model="formItems1.address" placeholder="请输入地址"/>
                   </el-form-item>
                   <el-form-item label="账户密码">
-                    <el-input v-model="formItems1.password" placeholder="请输入密码"/>
+                    <el-input type="password" v-model="formItems1.password" placeholder="请输入密码"/>
                   </el-form-item>
                   <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>
                 </el-form>
