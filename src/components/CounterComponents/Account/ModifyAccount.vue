@@ -152,6 +152,7 @@
 <script>
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import {sha256} from "js-sha256";
 import SHA256 from "crypto-js/sha256";
 
 
@@ -178,13 +179,12 @@ export default {
           // oldPassword: this.formItems1.oldPassword,
           oldPassword: SHA256(this.formItems1.oldPassword).toString(),
           // newPassword: this.formItems1.newPassword1,
-          newPassword: SHA256(this.formItems1.newPassword).toString(),
+          newPassword: SHA256(this.formItems1.newPassword1).toString(),
         })
             .then(response => {
               console.log(response);
               if (response.data.code === 1) {
                 ElMessage.success("密码修改成功");
-                // this.$refs["formItems1"].resetFields();
                 this.formItems1.oldPassword='';
                 this.formItems1.newPassword1='';
                 this.formItems1.newPassword2='';
