@@ -135,6 +135,23 @@
 <!--                <el-button type="primary" @click="ConfirmOpenAccount">确认</el-button>-->
               </el-tab-pane>
             </el-tabs>
+
+            <el-dialog v-model="ShowOpenAccount" title="开户结果" width="40%" align-center>
+              <el-form
+                  label-width="auto"
+                  style="max-width: 600px"
+              >
+                <el-form-item label = "银行卡号">{{formItems1.accountId}}</el-form-item>
+                <el-form-item label = "用户名">{{formItems1.customerName}}</el-form-item>
+                <el-form-item label = "地址">{{formItems1.address}}</el-form-item>
+                <el-form-item label = "身份证号">{{formItems1.idNumber}}</el-form-item>
+                <el-form-item label = "开户金额">{{formItems1.openAmount}}</el-form-item>
+                <el-form-item label = "电话号码">{{formItems1.phoneNumber}}</el-form-item>
+                <span>
+                  <el-button @click="this.ShowOpenAccount=false">确定</el-button>
+                </span>
+              </el-form>
+            </el-dialog>
           </el-card>
         </el-main>
       </el-container>
@@ -152,6 +169,7 @@ export default {
   data() {
     return {
       activeTab: 'tab1',
+      ShowOpenAccount: false,
       formItems1:{
         customerName: '',
         idNumber: '',
@@ -159,6 +177,7 @@ export default {
         openAmount: '',
         address: '',
         password: '',
+        accountId: ''
       }
     };
   },
@@ -178,6 +197,8 @@ export default {
           .then(response=>{
             if(response.data.code === 1){
               ElMessage.success("开户成功");
+              this.formItems1.accountId = response.data.payload;
+              this.ShowOpenAccount = true
               console.log(response.data);
               //location.href = '/menu'
             } else{

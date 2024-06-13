@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              解冻业务办理
+              查询账户信息
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -33,7 +33,7 @@
             </RouterLink>
             <span class="history-trail"> > </span>
             <RouterLink to="/account/savingaccount/queryaccount">
-              <span class="history-trail">解冻</span>
+              <span class="history-trail">查询账户信息</span>
             </RouterLink>
           </div>
         </el-main>
@@ -96,7 +96,7 @@
         <el-main>
           <el-card title="解冻" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="储蓄卡解冻" name="tab1">
+              <el-tab-pane label="账户信息查询" name="tab1">
                 <el-form
                     :label-position="left"
                     label-width="auto"

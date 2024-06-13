@@ -152,6 +152,39 @@
                 </el-form>
               </el-tab-pane>
             </el-tabs>
+
+            <el-dialog v-model="ShowDemandDeposit" title="活期存款信息" width="40%" align-center>
+              <el-form
+                  label-width="auto"
+                  style="max-width: 600px"
+              >
+                <el-form-item label = "流水号">{{demandDepositInfoForCard.transactionId}}</el-form-item>
+                <el-form-item label = "银行卡号">{{demandDepositInfoForCard.accountId}}</el-form-item>
+                <el-form-item label = "存款金额">{{demandDepositInfoForCard.amount}}</el-form-item>
+                <el-form-item label = "存款类型">活期存款</el-form-item>
+                <el-form-item label = "存款时间">{{demandDepositInfoForCard.demandDepositTime}}</el-form-item>
+                <span>
+                  <el-button @click="this.ShowDemandDeposit=false">确定</el-button>
+                </span>
+              </el-form>
+            </el-dialog>
+
+            <el-dialog v-model="ShowFixedDeposit" title="定期存款信息" width="40%" align-center>
+              <el-form
+                  label-width="auto"
+                  style="max-width: 600px"
+              >
+                <el-form-item label = "存款序列号">{{fixedDepositInfoForCard.fixedDepositId}}</el-form-item>
+                <el-form-item label = "银行卡号">{{fixedDepositInfoForCard.accountId}}</el-form-item>
+                <el-form-item label = "存款金额">{{fixedDepositInfoForCard.amount}}</el-form-item>
+                <el-form-item label = "定期存款类型">{{fixedDepositInfoForCard.fixedDepositType}}</el-form-item>
+                <el-form-item label = "存款时间">{{fixedDepositInfoForCard.fixedDepositTime}}</el-form-item>
+                <span>
+                  <el-button @click="this.ShowFixedDeposit=false">确定</el-button>
+                </span>
+              </el-form>
+            </el-dialog>
+
           </el-card>
         </el-main>
       </el-container>
@@ -178,11 +211,15 @@ export default {
     return {
       activeTab: 'tab1',
       depositType:'fixed',//demand
+      ShowFixedDeposit: false,
+      ShowDemandDeposit: false,
       fixedDepositInfoForCard:{
         accountId:'',
         fixedDepositType:'',
         amount:0.0,
-        password:''
+        password:'',
+        fixedDepositId:'',
+        fixedDepositTime:''
       },
       fixedDepositInfoForBook:{
         accountId:'',
@@ -193,7 +230,9 @@ export default {
       demandDepositInfoForCard:{
         accountId:'',
         amount:0.0,
-        password:''
+        password:'',
+        transactionId: '',
+        demandDepositTime:''
       },
       demandDepositInfoForBook:{
         accountId:'',
@@ -230,8 +269,12 @@ export default {
             depositType:depositType,
             amount:amount
           }).then(response=>{
-        if(response.data.code)
+        if(response.data.code){
           ElMessage.success("定期存款成功")
+          this.fixedDepositInfoForCard.fixedDepositId = response.data.payload.fixedDepositId
+          this.fixedDepositInfoForCard.fixedDepositTime = response.data.payload.depositTime
+          this.ShowFixedDeposit = true
+        }
         else ElMessage.error(response.data.message)// 显示消息提醒
       })
     },
@@ -242,8 +285,12 @@ export default {
             password: password,
             amount:amount
           }).then(response=>{
-        if(response.data.code)
+        if(response.data.code){
           ElMessage.success("活期存款成功")
+          this.demandDepositInfoForCard.transactionId = response.data.payload.transactionId
+          this.demandDepositInfoForCard.demandDepositTime = response.data.payload.transactionTime
+          this.ShowDemandDeposit = true
+        }
         else ElMessage.error(response.data.message)// 显示消息提醒
       })
     }

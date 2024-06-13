@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              开户业务办理
+              销户业务办理
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>

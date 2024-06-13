@@ -18,7 +18,7 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">
-              开户业务办理
+              修改账户密码
             </span>
             <RouterLink to="/menu">
               <span class="history-trail">菜单</span>
@@ -33,7 +33,7 @@
             </RouterLink>
             <span class="history-trail"> > </span>
             <RouterLink to="/account/savingaccount/modifyaccount">
-              <span class="history-trail">修改账户信息</span>
+              <span class="history-trail">修改密码</span>
             </RouterLink>
           </div>
         </el-main>
@@ -94,9 +94,9 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <el-card title="开户" class="deposit_card">
+          <el-card title="修改密码" class="deposit_card">
             <el-tabs v-model="activeTab" type="border-card">
-              <el-tab-pane label="销户" name="tab1">
+              <el-tab-pane label="修改密码" name="tab1">
                 <el-form
                     :label-position="left"
                     label-width="auto"
