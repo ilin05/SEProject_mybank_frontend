@@ -17,7 +17,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 
 //axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.baseURL = 'http://10.195.240.127:8000';
+axios.defaults.baseURL = 'http://10.195.2.78:8000';
 
 
 axios.interceptors.request.use( config =>{
