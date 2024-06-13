@@ -18,6 +18,7 @@
             </div>
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmCashierLogin">Login</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; cashierLoginVisible=false">管理员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="InternetLoginVisible = true; cashierLoginVisible=false">网银登录</button>
           </el-card>
 
           <el-card title="管理员登录" v-show="adminLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
@@ -34,6 +35,43 @@
             </div>
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmAdminLogin">Login</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = false; cashierLoginVisible=true">出纳员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = false; InternetLoginVisible=true">网银登录</button>
+          </el-card>
+
+          <el-card title="网银登录" v-show="InternetLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
+            <div style="margin-top: 20px;  font-size: 2em; font-weight: bold; color: #ffffff">
+              互联网用户登录
+            </div>
+            <div class="form-group">
+              <label for="cashierId" style="color: white">CustomerAccountId:</label>
+              <input type="text" id="cashierId" v-model="internetLoginInfo.internetId" required>
+            </div>
+            <div class="form-group">
+              <label for="password" style="color: white">Password:</label>
+              <input type="password" id="password" v-model="internetLoginInfo.password" required>
+            </div>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmInternetLogin">Login</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; InternetLoginVisible=false">管理员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="cashierLoginVisible = true; InternetLoginVisible=false">出纳员登录</button>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="Register">Register</button>
+          </el-card>
+
+          <el-card class="login_card" v-show="InternetRegisterVisible" style="display: flex; justify-content: center; vertical-align: center">
+            <div style="margin-top: 20px; font-size: 2em; font-weight: bold; color: #ffffff">互联网用户注册</div>
+            <div class="form-group">
+              <input type="text" id="idNumber" v-model="registerForm.idNumber" placeholder="身份证" required />
+            </div>
+            <div class="form-group">
+              <input type="text" id="phoneNumber" placeholder="电话号码" v-model="registerForm.phoneNumber" required />
+            </div>
+            <div class="form-group">
+              <input type="password" id="password" placeholder="密码" v-model="registerForm.password" required />
+            </div>
+            <div class="form-group">
+              <input type="password" id="surepassword" placeholder="确认密码" v-model="registerForm.surepassword" required />
+            </div>
+            <button type="submit" class="login-button" style="margin-top: 20px" @click="ConfirmRegister">Register</button>
+            <button type="submit" class="login-button" style="margin-top: 20px" @click="Back">Back</button>
           </el-card>
         </el-main>
 
@@ -69,7 +107,7 @@ input {
   background-color:rgba(255,255,255,20%);
   margin: auto;
   width: 500px;
-  height: 50%;
+  height: 70%;
   text-align: center;
   vertical-align:middle;
 }
@@ -117,14 +155,67 @@ export default {
         username : '',
         password : '',
       },
-
+      registerForm: {
+        customerName: '',
+        idNumber: '',
+        phoneNumber: '',
+        address: '',
+        password: '',
+        surepassword: ''
+      },
+      internetLoginInfo:{
+        internetId : '',
+        password : '',
+      },
+      InternetLoginVisible: false,
       adminLoginVisible : false,
+      InternetRegisterVisible: false,
       cashierLoginVisible : true,
     }
 
   },
 
   methods:{
+    // Register(){
+    //   console.log("hello")
+    //   router.push('/internet/register');
+    // },
+    Register(){
+      this.InternetLoginVisible = false;
+      this.InternetRegisterVisible = true;
+    },
+    Back(){
+      this.InternetLoginVisible = true;
+      this.InternetRegisterVisible = false;
+    },
+    ConfirmRegister() {
+      console.log(this.registerForm.password)
+      console.log(this.registerForm.surepassword !== this.registerForm.surepassword)
+      if(this.registerForm.password !== this.registerForm.surepassword){
+        ElMessage.error("密码和确认密码不一致!");
+        return;
+      }
+      axios
+          .post('/internet/register', {
+            idNumber: this.registerForm.idNumber,
+            phoneNumber: this.registerForm.phoneNumber,
+            password: this.registerForm.password
+          })
+          .then((response) => {
+            console.log("hello1")
+            if (response.data.code === 1) {
+              ElMessage.success({
+                message:'注册成功,账号:' + response.data.payload,
+                duration:0
+              });
+            } else {
+              ElMessage.error(response.data.message);
+            }
+          })
+          .catch((error) => {
+            ElMessage.error('failed');
+          });
+    },
     ConfirmAdminLogin(){
       //console.log("hello")
       //console.log(this.adminLoginInfo.password)
@@ -169,6 +260,27 @@ export default {
             ElMessage.error("用户名或密码错误");
           })
     },
+
+    ConfirmInternetLogin(){
+      axios.post("/internet/login",{
+        customerAccountId:this.internetLoginInfo.internetId,
+        password:this.internetLoginInfo.password,
+      })
+          .then(response=>{
+            if(response.data.code === 1){
+              ElMessage.success(response.data);
+              sessionStorage.setItem("token", response.data.payload);
+              router.push('/home/internetmenu')
+            }else if(response.data.code === 900){
+              ElMessage.error("账号不存在");
+            }else{
+              ElMessage.error("用户名或密码错误");
+            }
+          })
+          .catch(error =>{
+            ElMessage.error("用户名或密码错误");
+          })
+    }
   }
 }
 

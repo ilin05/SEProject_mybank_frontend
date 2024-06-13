@@ -30,6 +30,12 @@
                 color: black; font-weight: bold;">贷款审查员管理</span>
                 </el-button>
               </RouterLink>
+              <RouterLink to="/internetManage">
+                <el-button class="functionBox">
+                <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
+                color: black; font-weight: bold;">网银账户管理</span>
+                </el-button>
+              </RouterLink>
 
             </div>
             <RouterView class="main" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />

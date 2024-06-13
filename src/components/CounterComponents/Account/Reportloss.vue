@@ -155,7 +155,6 @@ export default {
   },
   methods:{
     ConfirmReportLoss(){
-      console.log("hello3")
       axios.post("/cashier/reportLoss",{
         accountId:this.formItems1.accountId,
         password: this.formItems1.password

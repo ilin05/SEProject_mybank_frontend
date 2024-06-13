@@ -24,6 +24,22 @@ import QueryAccount from "@/components/CounterComponents/Account/QueryAccount.vu
 
 import CashierVue from "@/components/AdminComponents/Cashier/Cashier.vue";
 import CustomerQuery   from "@/components/CounterComponents/Customer/CustomerQuery.vue";
+import Register from "@/components/InternetComponents/Register.vue";
+
+import Banlance from "@/components/InternetComponents/Banlance.vue";
+import Loss from "@/components/InternetComponents/Loss.vue"
+import InternetSelect from "@/components/InternetComponents/Select.vue"
+import TransactionHistory from "@/components/InternetComponents/TransactionHistory.vue";
+import InternetTransfer from "@/components/InternetComponents/Transfer.vue"
+import InternetMenu from "@/components/InternetComponents/InternetMenu.vue";
+
+import ApplicationVue from "@/components/LoanComponents/Application.vue";
+import HistoryVue from "@/components/LoanComponents/History.vue";
+import HomeVue from "@/components/Home.vue"
+import RepayVue from "@/components/LoanComponents/Repay.vue"
+import WithdrawLoanVue from "@/components/LoanComponents/Withdraw.vue"
+
+import InternetManage from "@/components/AdminComponents/Inernet/Internet.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,7 +105,7 @@ const router = createRouter({
     },
     {
       path: '/business/withdraw',
-      component: WithdrawVue
+      component: WithdrawLoanVue
     },
     {
       path: '/business/transfer',
@@ -138,11 +154,71 @@ const router = createRouter({
       component: QueryAccount
     },
 
+
       //cashier底下的索引
     {
       path: '/cashier',
       component: CashierVue
     },
+    {
+      path: '/internetManage',
+      component: InternetManage
+    },
+
+
+    {
+      path: '/home',
+      component: HomeVue,
+      children:[
+        // 用户索引
+        {
+          path: '/home/internetmenu',
+          component:InternetMenu
+        },
+        {
+          path: '/home/loan/application',
+          component:ApplicationVue
+        },
+        {
+          path: '/home/loan/history',
+          component:HistoryVue
+        },
+        {
+          path: '/home/loan/withdraw',
+          component:WithdrawLoanVue
+        },
+        {
+          path: '/home/loan/repayment',
+          component:RepayVue
+        },
+
+          // internet
+        {
+          path: '/home/internet/register',
+          component: Register
+        },
+        {
+          path:'/home/internet/banlance',
+          component:Banlance
+        },
+        {
+          path:'/home/internet/loss',
+          component:Loss
+        },
+        {
+          path:'/home/internet/select',
+          component:InternetSelect
+        },
+        {
+          path:'/home/internet/transactionHistory',
+          component:TransactionHistory
+        },
+        {
+          path:'/home/internet/transfer',
+          component:InternetTransfer
+        },
+      ]
+    }
   ]
 })
 router.beforeEach((to, from, next)=>{
