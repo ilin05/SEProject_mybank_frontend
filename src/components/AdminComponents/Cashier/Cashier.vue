@@ -269,7 +269,7 @@ export default {
             console.log(response.data)
             if (response.data.code === 1) {
               ElMessage.success(response.data);
-              this.modifyCashierVisible = false;
+              this.deleteCashierVisible = false;
               this.QueryCashier();
             } else {
               ElMessage.error("修改失败");
