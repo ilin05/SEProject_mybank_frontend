@@ -15,7 +15,7 @@
 								<el-input v-model="formItems1.accountId" style="width: 240px" placeholder="请输入网银账号" />
 							</div>
               <div>
-                <el-input v-model="formItems1.password" style="width: 240px" placeholder="请输入密码" />
+                <el-input type="password" v-model="formItems1.password" style="width: 240px" placeholder="请输入密码" />
                 <el-button type="info" style="margin-left: 45px; width: 60px; height: 40px" @click="query" color="black">查询</el-button>
               </div>
 						</div>

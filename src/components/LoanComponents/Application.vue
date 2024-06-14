@@ -5,11 +5,11 @@
         <el-main class="background_container">
           <div class="title2">
             <span style="margin-left: 5%">贷款申请</span>
-            <RouterLink to="/user">
+            <RouterLink to="/home/internetmenu">
               <span class="history-trail">用户主菜单</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/user/application">
+            <RouterLink to="/home/loan/application">
               <span class="history-trail">贷款申请</span>
             </RouterLink>
           </div>
@@ -51,20 +51,23 @@
             </el-form>
             <div class="footer">
               <el-button type="success" @click="showApplicationDialog">申请</el-button>
-              <el-button type="warning" @click="showCredit">查看个人信用额度</el-button>
+              <el-button type="warning" @click="getCredit(); showCreditDialog()">查看个人信用额度</el-button>
             </div>
           </div>
         </el-main>
       </el-container>
 
       <el-dialog v-model="CreditVisible" title="个人信用额度">
+        <el-divider></el-divider>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; margin-bottom: 20px">
           信用额度：
           {{ this.credit }}
         </div>
+        <el-divider></el-divider>
       </el-dialog>
 
       <el-dialog v-model="applicationVisible" title="确认申请">
+        <el-divider></el-divider>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
           储蓄卡号：
           {{ LoanData.accountId }}
@@ -87,6 +90,7 @@
             <el-button type="primary" @click="this.applicationVisible = false">取消</el-button>
           </span>
         </template>
+        <el-divider></el-divider>
       </el-dialog>
 
     </el-container>
@@ -110,7 +114,7 @@ export default {
       credit: 5000,
 
       LoanData: {
-        customerId: 1,
+        customerId: 2,
         accountId: '',
         loanAmount: 0,
         loanDuration: '',
@@ -139,6 +143,9 @@ export default {
     showApplicationDialog() {
       this.applicationVisible = true;
     },
+    showCreditDialog(){
+      this.CreditVisible = true;
+    },
     confirmApplication() {
       let config = {
         headers: {
@@ -147,7 +154,7 @@ export default {
       }
       let response = axios.post('/home/loan/application/apply',
           {
-            customerId: this.LoanData.customerId,
+            customerId: this.customerId,
             accountId: this.LoanData.accountId,
             loanAmount: this.LoanData.loanAmount,
             loanDuration: this.durationTransform(this.LoanData.loanDuration),
@@ -166,8 +173,7 @@ export default {
             this.getAvailableCards();
           })
     },
-    showCredit(){
-      this.credit = null;
+    getCredit(){
       this.CreditVisible = true;
       let config = {
         headers: {
@@ -176,7 +182,7 @@ export default {
       }
       let response = axios.post('/home/loan/application/credit',
           {
-            customerId: 1,
+            customerId: this.customerId,
           },
           config,
       )
@@ -193,7 +199,7 @@ export default {
       }
       let response = axios.post('/home/loan/application/card',
           {
-            customerId: 1,
+            customerId: this.customerId,
           },
           config,
       )
@@ -247,7 +253,7 @@ export default {
 }
 
 .title2 {
-  background: url("../../assets/figure2.jpg");
+  background: url("../../assets/figure1.png");
   height: 60px;
   display: flex;
   align-items: center;
@@ -274,7 +280,7 @@ export default {
 
 .user-form {
   width: 100%; /* 调整表单宽度 */
-  font-size: 18px; /* 增大字体 */
+  font-size: 14px; /* 增大字体 */
   line-height: 2; /* 增加行距 */
   margin-left: 0; /* 左移表单 */
 }

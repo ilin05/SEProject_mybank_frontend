@@ -5,7 +5,7 @@
         <el-header class="title" style="display: flex; justify-content: space-between;">
           <div style="margin-top: 12px; display: inline-block;">
             <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行管理员系统</span>
-            <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员：XXX</span>
+            <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员您好！</span>
           </div >
           <RouterLink to="/login">
             <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
@@ -34,6 +34,12 @@
                 <el-button class="functionBox">
                 <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
                 color: black; font-weight: bold;">网银账户管理</span>
+                </el-button>
+              </RouterLink>
+              <RouterLink to="/authorization">
+                <el-button class="functionBox">
+			          <span style="font-size: xx-large; font-family: 'Microsoft YaHei';
+			          color: black; font-weight: bold;">信用卡审查员管理</span>
                 </el-button>
               </RouterLink>
 

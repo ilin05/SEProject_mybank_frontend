@@ -6,11 +6,11 @@
           <el-main class="main-content">
             <div class="title2">
               <span style="margin-left: 5%">申请结果</span>
-              <RouterLink to="/user">
-                <span class="history-trail">用户主菜单</span>
+              <RouterLink to="/home/internetmenu">
+                <span class="history-trail">主菜单</span>
               </RouterLink>
               <span class="history-trail"> > </span>
-              <RouterLink to="/user/history">
+              <RouterLink to="/home/loan/withdraw">
                 <span class="history-trail">申请结果</span>
               </RouterLink>
             </div>
@@ -27,7 +27,7 @@
                 </el-table-column>
                 <el-table-column prop="accountId" label="储蓄卡号" width="200px" sortable>
                 </el-table-column>
-                <el-table-column prop="loanAmount" label="贷款金额" width="200px" sortable>
+                <el-table-column prop="loanAmount" label="贷款金额" width="160px" sortable>
                 </el-table-column>
                 <el-table-column prop="loanDuration" label="贷款期限" width="120px" sortable>
                   <template v-slot="scope">
@@ -38,7 +38,9 @@
                 </el-table-column>
                 <el-table-column prop="loanType" label="贷款用途" width="110px" sortable>
                 </el-table-column>
-                <el-table-column prop="reviewComments" label="审查意见" width="300px" sortable>
+                <el-table-column prop="applicationDate" label="申请时间" width="110px" sortable>
+                </el-table-column>
+                <el-table-column prop="reviewComments" label="审查意见" width="250px" sortable>
                   <template v-slot="scope">
                     <el-text style="width: 300px; font-weight: bold; font-size: 1rem;" truncated>
                       {{scope.row.reviewComments}}
@@ -58,6 +60,7 @@
       </el-container>
 
       <el-dialog v-model="confirmLoanVisible" title="撤销申请确认">
+        <el-divider></el-divider>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px;">
           贷款id：
           {{ confirmApplicationData.loanId }}
@@ -78,6 +81,10 @@
           贷款类别：
           {{ confirmApplicationData.loanType }}
         </div>
+        <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
+          申请时间：
+          {{ confirmApplicationData.applicationDate }}
+        </div>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; max-width: 300px">
           审查意见：
           {{ confirmApplicationData.reviewComments }}
@@ -88,9 +95,11 @@
             <el-button @click="confirmLoanVisible = false">取消</el-button>
           </span>
         </template>
+        <el-divider></el-divider>
       </el-dialog>
 
       <el-dialog v-model="deleteLoanVisible" title="撤销申请确认">
+        <el-divider></el-divider>
         <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px;">
           贷款id：
           {{ DeleteApplicationData.loanId }}
@@ -121,6 +130,7 @@
             <el-button @click="deleteLoanVisible = false">取消</el-button>
           </span>
         </template>
+        <el-divider></el-divider>
       </el-dialog>
     </el-container>
   </div>
@@ -146,6 +156,7 @@ export default {
           loanAmount: 5000,
           interestRate: 0.98,
           loanDuration: 12,
+          applicationDate: '',
           loanType: '',
           status: '未审批',
           reviewComments: '',
@@ -213,7 +224,7 @@ export default {
       }
       let response = axios.post('/home/loan/withdraw/confirm',
           {
-            loanId: this.DeleteApplicationData.loanId
+            loanId: this.confirmApplicationData.loanId
           },
           config
       )
@@ -221,7 +232,7 @@ export default {
             let data = response.data;
             if (data === "success"){
               ElMessage.success("贷款确认成功") // 显示消息提醒
-            }else if (data === "fail"){
+            }else if (data === "failed"){
               ElMessage.error("贷款确认失败")
             }
             this.QueryLoanApplication()
@@ -244,7 +255,7 @@ export default {
         let data = response.data;
         if (data === "success"){
           ElMessage.success("申请撤销成功") // 显示消息提醒
-        }else if (data === "fail"){
+        }else if (data === "failed"){
           ElMessage.error("申请撤销失败")
         }
         this.QueryLoanApplication()
@@ -259,7 +270,7 @@ export default {
       }
       let response = axios.post('/home/loan/withdraw',
         {
-          customerId: 1,
+          customerId: this.customerId,
           time: this.time,
         },
         config,
@@ -299,7 +310,7 @@ export default {
 }
 
 .title2 {
-  background: url("../../assets/figure2.jpg");
+  background: url("../../assets/figure1.png");
   height: 60px;
   display: flex;
   align-items: center;

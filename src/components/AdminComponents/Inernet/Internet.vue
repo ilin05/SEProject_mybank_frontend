@@ -4,7 +4,7 @@
       <el-header class="title">
         <div style="margin-top: 12px; display: inline-block;">
           <span style="font-size: large; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">银行管理员系统</span>
-          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员：XXX</span>
+          <span style="margin-left :30px; font-size: medium; font-family: 'Microsoft YaHei'; color: #ffffff; font-weight: bold;">管理员您好！</span>
         </div >
         <RouterLink to="/login">
           <el-button type="primary" style="margin-top: 12px; padding-right: 10px;">
@@ -23,7 +23,7 @@
               <span class="history-trail">菜单</span>
             </RouterLink>
             <span class="history-trail"> > </span>
-            <RouterLink to="/cashier">
+            <RouterLink to="/internetManage">
               <span class="history-trail">网银账户管理</span>
             </RouterLink>
           </div>

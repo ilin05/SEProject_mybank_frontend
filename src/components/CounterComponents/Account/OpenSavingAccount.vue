@@ -130,7 +130,7 @@
                     </el-select>
 
                   </el-form-item>
-                  <el-button type="primary" @click="InputPasswordVisible=true">确认</el-button>
+                  <el-button type="primary" @click="InputPasswordVisible=true" :disabled="formItems1.openAmount<0">确认</el-button>
                 </el-form>
               </el-tab-pane>
             </el-tabs>
@@ -203,6 +203,11 @@ export default {
   },
   methods:{
     ConfirmOpenAccount(){
+      if(this.formItems1.password.length!==6){
+        ElMessage.error("密码应为6位")
+        return ;
+      }
+
       if(this.passwordTemp===this.formItems1.password){
         console.log("hello2")
         console.log(this.hashString(this.formItems1.password,))

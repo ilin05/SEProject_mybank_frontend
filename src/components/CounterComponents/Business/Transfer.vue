@@ -162,23 +162,29 @@ export default {
   },
   methods:{
     confirmTransfer(){
-      axios.post("/cashier/transfer",
-          {
-            cardId:this.transferInfo.cardId,
-            password:SHA256(this.transferInfo.password).toString(),
-            transactionAmount:this.transferInfo.transactionAmount,
-            moneyGoes:this.transferInfo.moneyGoes
-          }).then(response=>{
-        if(response.data.code){
-          ElMessage.success("转账成功")
-          this.transferInfo.transactionId = response.data.payload.transactionId
-          this.transferInfo.transactionTime = response.data.payload.transactionTime
-          this.ShowTransaction = true;
-          this.InputPassordVisible = false;
-          this.transferInfo.password='';
-        }
-        else ElMessage.error(response.data.message)// 显示消息提醒
-      })
+      if(this.transferInfo.cardId === this.transferInfo.moneyGoes){
+        ElMessage.error("转入方和转出方不能是同一张卡号！")
+      }else if(this.transferInfo.transactionAmount <= 0){
+        ElMessage.error("转账金额必须大于0！")
+      }else{
+        axios.post("/cashier/transfer",
+            {
+              cardId:this.transferInfo.cardId,
+              password:SHA256(this.transferInfo.password).toString(),
+              transactionAmount:this.transferInfo.transactionAmount,
+              moneyGoes:this.transferInfo.moneyGoes
+            }).then(response=>{
+          if(response.data.code){
+            ElMessage.success("转账成功")
+            this.transferInfo.transactionId = response.data.payload.transactionId
+            this.transferInfo.transactionTime = response.data.payload.transactionTime
+            this.ShowTransaction = true;
+            this.InputPassordVisible = false;
+            this.transferInfo.password='';
+          }
+          else ElMessage.error(response.data.message)// 显示消息提醒
+        })
+      }
     }
   }
 

@@ -6,15 +6,15 @@
           <el-main class="main-content">
             <div class="title2">
               <span style="margin-left: 5%">贷款还款</span>
-              <RouterLink to="/user">
+              <RouterLink to="/home/internetmenu">
                 <span class="history-trail">用户主菜单</span>
               </RouterLink>
               <span class="history-trail"> > </span>
-              <RouterLink to="/user/history">
+              <RouterLink to="/home/loan/repayment">
                 <span class="history-trail">用户贷款记录</span>
               </RouterLink>
             </div>
-            <el-card title="用户贷款记录" class="history_table" default-sort="{ prop: 'loanStartDate', order: 'ascending' }">
+            <el-card title="用户贷款记录" class="history_table">
               <el-table :data="LoanRepayData" stripe border :default-sort="{ prop: 'loanId', order: 'ascending' }" max-height="600">
                 <el-table-column prop="loanId" label="贷款编号" width="90px">
                 </el-table-column>
@@ -29,18 +29,18 @@
                     {{ durationTransform(scope.row.loanDuration) }}
                   </template>
                 </el-table-column>
-                <el-table-column prop="status" label="贷款状态" width="130px">
+                <el-table-column prop="status" label="贷款状态" sortable>
                 </el-table-column>
                 <el-table-column prop="paidAmount" label="已还款金额" width="100px">
                 </el-table-column>
-                <el-table-column prop="loanStartDate" label="贷款起始日期" sortable>
+                <el-table-column prop="loanStartDate" label="贷款起始日期" width="150px" sortable>
                 </el-table-column>
-                <el-table-column label="下次还款日期" sortable>
+                <el-table-column label="最迟下次还款日期" width="170px" sortable>
                   <template v-slot="scope">
                     {{ calculateNextRepaymentDate(scope.row) }}
                   </template>
                 </el-table-column>
-                <el-table-column prop="nextRepayAmount" label="下次还款金额" sortable>
+                <el-table-column prop="nextRepayAmount" label="下次最少还款金额" width="170px" sortable>
                   <template v-slot="scope">
                     {{ calculateNextRepaymentAmount(scope.row) }}
                   </template>
@@ -194,7 +194,7 @@ export default {
       }
       let response = axios.post('/home/loan/repay',
           {
-            customerId: 1,
+            customerId: this.customerId,
           },
           config
       )
@@ -214,7 +214,7 @@ export default {
       }
       let response = axios.post('/home/loan/repay/card',
           {
-            customerId: 1,
+            customerId: this.customerId,
             balance: this.ToRepay.nextRepayAmount,
           },
           config,
@@ -270,7 +270,7 @@ export default {
 }
 
 .title2 {
-  background: url("../../assets/figure2.jpg");
+  background: url("../../assets/figure1.png");
   height: 60px;
   display: flex;
   align-items: center;

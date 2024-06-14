@@ -54,6 +54,7 @@
 import axios from 'axios';
 import router from "@/router/index.js";
 import { ElMessage } from 'element-plus';
+import SHA256 from "crypto-js/sha256";
 export default {
 	data() {
 		return {
@@ -72,7 +73,7 @@ export default {
 			axios
 				.post('/internet/transfer',{
           cardId:this.fromAccountId,
-					password:this.password,
+					password:SHA256(this.password).toString(),
           transactionAmount:this.money,
           moneyGoes:this.toAccountId,
 				})

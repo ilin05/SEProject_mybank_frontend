@@ -35,6 +35,7 @@
 	import router from "@/router/index.js";
   import axios from "axios";
   import {ElMessage} from "element-plus";
+  import SHA256 from "crypto-js/sha256.js";
 export default {
 	data() {
 		return {
@@ -50,7 +51,7 @@ export default {
     reportLoss(){
       axios.post("/internet/reportLoss",{
         accountId:this.accountId,
-        password: this.password
+        password: SHA256(this.password).toString()
       })
           .then(response=>{
             if(response.data.code === 1){

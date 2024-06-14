@@ -171,8 +171,12 @@ export default {
   },
   methods: {
     ConfirmModifyAccount() {
+
       if(this.formItems1.newPassword1 !== this.formItems1.newPassword2){
         ElMessage.error("两次输入的新密码不同，请重新输入！")
+      }
+      else if(this.formItems1.newPassword1.length!==6){
+        ElMessage.error("新密码应该为6位")
       }else{
         axios.post("/cashier/modifyPassword", {
           accountId: this.formItems1.accountId,

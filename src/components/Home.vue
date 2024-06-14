@@ -30,6 +30,7 @@
                   <el-menu-item index="/home/internet/banlance">余额</el-menu-item>
                   <el-menu-item index="/home/internet/transactionHistory">交易历史</el-menu-item>
                   <el-menu-item index="/home/internet/select">储蓄卡查询</el-menu-item>
+                  <el-menu-item index="/home/internet/modify">修改网银密码</el-menu-item>
                 </el-sub-menu>
                 <el-menu-item index="/home/internet/transfer">
                   <span>转账</span>
@@ -73,7 +74,7 @@
                   <template #title>
                     <el-icon><message /></el-icon>信用卡
                   </template>
-                  <el-menu-item index="3-1">
+                  <el-menu-item index="/creditcard/menu">
                     <el-icon>
                       <Postcard />
                     </el-icon>
@@ -81,18 +82,23 @@
                   </el-menu-item>
                 </el-sub-menu>
 
-                <!-- 外汇子功能 -->
-                <el-sub-menu index="4">
-                  <template #title>
-                    <el-icon><message /></el-icon>外汇
-                  </template>
-                  <el-menu-item index="4-1">
-                    <el-icon>
-                      <Postcard />
-                    </el-icon>
-                    <span>外汇</span>
-                  </el-menu-item>
-                </el-sub-menu>
+<!--                &lt;!&ndash; 外汇子功能 &ndash;&gt;-->
+<!--                <el-sub-menu index="4">-->
+<!--                  <template #title>-->
+<!--                    <el-icon><message /></el-icon>外汇-->
+<!--                  </template>-->
+<!--                  <el-menu-item index="4-1">-->
+<!--                    <el-icon>-->
+<!--                      <Postcard />-->
+<!--                    </el-icon>-->
+<!--                    <span>外汇</span>-->
+<!--                  </el-menu-item>-->
+<!--                </el-sub-menu>-->
+                <el-menu-item>
+                  <span >
+                    <el-link style="color: white" href="http://localhost:8000/login.html"><el-icon><message /></el-icon>外汇</el-link>
+                  </span>
+                </el-menu-item>
               </el-menu>
             </el-scrollbar>
           </el-aside>

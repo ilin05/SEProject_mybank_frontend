@@ -13,7 +13,7 @@
 							<div style="margin-top: 5px">
 								<el-select v-model="type" placeholder="card_type" size="large" style="width: 240px;">
 								      <el-option  key="储蓄卡" label="储蓄卡" value="储蓄卡"/>
-									  <el-option  key="信用卡" label="信用卡" value="信用卡"/>
+<!--									  <el-option  key="信用卡" label="信用卡" value="信用卡"/>-->
 								</el-select>
 								   
 							</div>
@@ -59,6 +59,7 @@ export default {
 	},
 	methods: {
 		DeleteToken() {
+      localStorage.clear();
 			sessionStorage.clear();
 			 router.push('/login')
 		},

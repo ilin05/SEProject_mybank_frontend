@@ -44,12 +44,12 @@
               </el-icon>
               <span>储蓄账户</span>
             </el-menu-item>
-            <el-menu-item index="/account/creditcard">
-              <el-icon>
-                <Postcard />
-              </el-icon>
-              <span>信用卡</span>
-            </el-menu-item>
+<!--            <el-menu-item index="/account/creditcard">-->
+<!--              <el-icon>-->
+<!--                <Postcard />-->
+<!--              </el-icon>-->
+<!--              <span>信用卡</span>-->
+<!--            </el-menu-item>-->
             <el-menu-item index="/account/foreigncurrency">
               <el-icon>
                 <Tickets />

@@ -19,6 +19,8 @@
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmCashierLogin">Login</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; cashierLoginVisible=false">管理员登录</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="InternetLoginVisible = true; cashierLoginVisible=false">网银登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="AuditorLoginVisible = true; cashierLoginVisible=false">信用卡审查员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="LoanLoginVisible = true; cashierLoginVisible=false">贷款审查员登录</button>
           </el-card>
 
           <el-card title="管理员登录" v-show="adminLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
@@ -36,6 +38,8 @@
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmAdminLogin">Login</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = false; cashierLoginVisible=true">出纳员登录</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = false; InternetLoginVisible=true">网银登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="AuditorLoginVisible = true; adminLoginVisible=false">信用卡审查员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="LoanLoginVisible = true; adminLoginVisible=false">贷款审查员登录</button>
           </el-card>
 
           <el-card title="网银登录" v-show="InternetLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
@@ -53,7 +57,47 @@
             <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmInternetLogin">Login</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; InternetLoginVisible=false">管理员登录</button>
             <button type="button" class="login-button" style="margin-top:20px" @click="cashierLoginVisible = true; InternetLoginVisible=false">出纳员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="AuditorLoginVisible = true; InternetLoginVisible=false">信用卡审查员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="LoanLoginVisible = true; InternetLoginVisible=false">贷款审查员登录</button>
             <button type="submit" class="login-button" style="margin-top:20px" @click="Register">Register</button>
+          </el-card>
+
+          <el-card title="信用卡审查员登录" v-show="AuditorLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
+            <div style="margin-top: 20px;  font-size: 2em; font-weight: bold; color: #ffffff">
+              信用卡审查员登录
+            </div>
+            <div class="form-group">
+              <label for="cashierId" style="color: white">CustomerAccountId:</label>
+              <input type="text" id="cashierId" v-model="auditorLoginInfo.auditorId" required>
+            </div>
+            <div class="form-group">
+              <label for="password" style="color: white">Password:</label>
+              <input type="password" id="password" v-model="auditorLoginInfo.password" required>
+            </div>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmAuditorLogin">Login</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; AuditorLoginVisible=false">管理员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="cashierLoginVisible = true; AuditorLoginVisible=false">出纳员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="InternetLoginVisible = true; AuditorLoginVisible=false">网银登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="LoanLoginVisible = true; AuditorLoginVisible=false">贷款审查员登录</button>
+          </el-card>
+
+          <el-card title="贷款审查员登录" v-show="LoanLoginVisible" class="login_card" style="display: flex; justify-content: center ; vertical-align: center">
+            <div style="margin-top: 20px;  font-size: 2em; font-weight: bold; color: #ffffff">
+              贷款审查员登录
+            </div>
+            <div class="form-group">
+              <label for="cashierId" style="color: white">CustomerAccountId:</label>
+              <input type="text" id="loanId" v-model="loanLoginInfo.loanId" required>
+            </div>
+            <div class="form-group">
+              <label for="password" style="color: white">Password:</label>
+              <input type="password" id="password" v-model="loanLoginInfo.password" required>
+            </div>
+            <button type="submit" class="login-button" style="margin-top:20px" @click="ConfirmLoanLogin">Login</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="adminLoginVisible = true; LoanLoginVisible=false">管理员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="cashierLoginVisible = true; LoanLoginVisible=false">出纳员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="AuditorLoginVisible = true; LoanLoginVisible=false">信用卡审查员登录</button>
+            <button type="button" class="login-button" style="margin-top:20px" @click="InternetLoginVisible = true; LoanLoginVisible=false">网银登录</button>
           </el-card>
 
           <el-card class="login_card" v-show="InternetRegisterVisible" style="display: flex; justify-content: center; vertical-align: center">
@@ -107,7 +151,7 @@ input {
   background-color:rgba(255,255,255,20%);
   margin: auto;
   width: 500px;
-  height: 70%;
+  height: 80%;
   text-align: center;
   vertical-align:middle;
 }
@@ -155,6 +199,14 @@ export default {
         username : '',
         password : '',
       },
+      auditorLoginInfo:{
+        auditorId: '',
+        password: ''
+      },
+      loanLoginInfo:{
+        loanId: '',
+        password: ''
+      },
       registerForm: {
         customerName: '',
         idNumber: '',
@@ -171,6 +223,8 @@ export default {
       adminLoginVisible : false,
       InternetRegisterVisible: false,
       cashierLoginVisible : true,
+      AuditorLoginVisible: false,
+      LoanLoginVisible: false
     }
 
   },
@@ -269,9 +323,57 @@ export default {
           .then(response=>{
             if(response.data.code === 1){
               ElMessage.success(response.data);
-              sessionStorage.setItem("token", response.data.payload);
+              sessionStorage.setItem("token", response.data.payload.token);
+              localStorage.setItem("user-id", response.data.payload.customerId);
+              localStorage.setItem("customerId",response.data.payload.customerId);
               router.push('/home/internetmenu')
             }else if(response.data.code === 900){
+              ElMessage.error("账号不存在");
+            }else{
+              ElMessage.error("用户名或密码错误");
+            }
+          })
+          .catch(error =>{
+            ElMessage.error("用户名或密码错误");
+          })
+    },
+
+    ConfirmAuditorLogin(){
+      console.log(this.auditorLoginInfo.auditorId)
+      console.log(this.auditorLoginInfo.password)
+      axios.post("/auditor/login",{
+        auditorId:this.auditorLoginInfo.auditorId,
+        password:this.auditorLoginInfo.password
+      })
+          .then(response=>{
+            if(response.data.code === 1){
+              ElMessage.success(response.data);
+              sessionStorage.setItem("token", response.data.payload);
+              localStorage.setItem("auditorId", this.auditorLoginInfo.auditorId);
+              router.push('/auditor/menu')
+            }else if(response.data.code === 900){
+              ElMessage.error("账号不存在");
+            }else{
+              ElMessage.error("用户名或密码错误");
+            }
+          })
+          .catch(error =>{
+            ElMessage.error("用户名或密码错误");
+          })
+    },
+
+    ConfirmLoanLogin(){
+      axios.post("admin/loan/login",{
+        loanId:this.loanLoginInfo.loanId,
+        password:this.loanLoginInfo.password
+      })
+          .then(response=>{
+            if(response.data.code === 1){
+              ElMessage.success(response.data);
+              localStorage.setItem("reviewerId", this.loanLoginInfo.loanId);
+              sessionStorage.setItem("token", response.data.payload);
+              router.push('/loan/menu')
+            }else if(response.data.payload === "900"){
               ElMessage.error("账号不存在");
             }else{
               ElMessage.error("用户名或密码错误");
